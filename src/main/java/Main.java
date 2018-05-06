@@ -1,5 +1,6 @@
 import component.Connection;
 import component.Value;
+import exception.InvalidNetworkParametersException;
 import network.Network;
 
 import java.util.ArrayList;
@@ -12,9 +13,13 @@ public class Main {
         List<Value> inputs = new ArrayList<>();
         List<Value> outputs = new ArrayList<>();
 
-        Network network = new Network(inputs, outputs, 5, 10);
+        try {
+            Network network = new Network(1, 1, 5, 10, 0);
+        } catch (InvalidNetworkParametersException e) {
+            e.printStackTrace();
+        }
 
-//        network.getLayers();
+//        network.getLayersCopy();
     }
 }
 

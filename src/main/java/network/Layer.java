@@ -16,4 +16,8 @@ public class Layer {
     private List<Neuron> createNeurons(int neuronsNumber){
         return Stream.generate(Neuron::new).limit(neuronsNumber).collect(Collectors.toList());
     }
+
+    public List<Neuron> getNeurons() {
+        return neurons;
+    }
 }

@@ -1,49 +1,37 @@
 package network;
 
-import component.Value;
+import component.Neuron;
+import exception.InvalidNetworkParametersException;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Network {
-    private final List<Value> inputs;
-    private final List<Value> outputs;
-    private final List<Layer> layers;
+    private final ArrayList<Layer> layers;
 
-    public Network(List<Value> inputs, List<Value> outputs, int... neuronsByLayer) {
-        this.inputs = inputs;
-        this.outputs = outputs;
+    public Network(int inputs, int outputs, int... neuronsByLayer) throws InvalidNetworkParametersException {
+        if(!isValid(inputs, outputs, neuronsByLayer)){
+            String invalidParametersMessage = "Cannot construct network with given parameters: " +
+                "inputs = " + inputs + " outputs = " + outputs +
+                " neuronsByLayer = " + String.join(",", Arrays.toString(neuronsByLayer));
+            throw new InvalidNetworkParametersException(invalidParametersMessage);
+        }
 
         layers = createLayers(inputs, outputs, neuronsByLayer);
 
         initialize();
     }
 
-    private List<Layer> createLayers(List<Value> inputs, List<Value> outputs, int... neuronsByLayer){
-        List<Layer> layers = new ArrayList<>(neuronsByLayer.length + 2);
+    private ArrayList<Layer> createLayers(int inputs, int outputs, int... neuronsByLayer){
+        ArrayList<Layer> layers = new ArrayList<>(neuronsByLayer.length + 2);
 
-        layers.add(createInputLayer(inputs));
-        layers.addAll(createHiddenLayers(neuronsByLayer));
-        layers.add(createOutputLayer(outputs));
+        layers.add(new Layer(inputs));
+        layers.addAll(IntStream.of(neuronsByLayer).mapToObj(Layer::new).collect(Collectors.toList()));
+        layers.add(new Layer(outputs));
 
         return layers;
-    }
-
-    private Layer createInputLayer(List<Value> inputs){
-
-        return null;
-    }
-
-    private Collection<Layer> createHiddenLayers(int... neuronsByLayer){
-        return IntStream.of(neuronsByLayer).mapToObj(Layer::new).collect(Collectors.toList());
-    }
-
-    private Layer createOutputLayer(List<Value> outputs){
-
-        return null;
     }
 
     private void initialize(){
@@ -53,7 +41,7 @@ public class Network {
     }
 
     private void connectLayers(){
-
+        IntStream.range(0, layers.size() - 1).forEach(i -> connectLayersNeurons(layers.get(i), layers.get(i + 1)));
     }
 
     private void randomiseConnectionWeights(){
@@ -64,7 +52,20 @@ public class Network {
 
     }
 
-    public List<Layer> getLayers() {
+    private void connectLayersNeurons(Layer leftLayer, Layer rightLayer){
+        for(Neuron leftLayerNeuron : leftLayer.getNeurons()){
+            for(Neuron rightLayerNeuron : rightLayer.getNeurons()){
+                rightLayerNeuron.addInputConnection(leftLayerNeuron.getOutputConnection());
+            }
+        }
+    }
+
+    private boolean isValid(int inputs, int outputs, int... neuronsByLayer) {
+        return inputs > 0 && outputs > 0 &&
+            !IntStream.range(0, neuronsByLayer.length).anyMatch(i -> neuronsByLayer[i] < 1);
+    }
+
+    public ArrayList<Layer> getLayersCopy() {
         return new ArrayList<>(layers);
     }
 }

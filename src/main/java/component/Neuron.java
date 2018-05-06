@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Neuron {
-    private final List<Connection> inputs = new ArrayList<>();
-    // TODO: implement output part
-//    private final Connection output = new Connection();
+    private final List<Connection> inputConnections = new ArrayList<>();
+    private final Connection outputConnection = new Connection();
 
-    public List<Connection> getInputs() {
-        return inputs;
+    public List<Connection> getInputConnections() {
+        return inputConnections;
     }
 
-//    public Connection getOutput() {
-//        return output;
-//    }
+    public Connection getOutputConnection() {
+        return outputConnection;
+    }
+
+    public void addInputConnection(Connection connection){
+        inputConnections.add(connection);
+    }
 }

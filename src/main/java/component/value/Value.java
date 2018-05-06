@@ -1,4 +1,4 @@
-package component;
+package component.value;
 
 import exception.ValueNotInRangeException;
 

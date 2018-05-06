@@ -1,5 +1,4 @@
-import component.Connection;
-import component.Value;
+import component.value.Value;
 import exception.InvalidNetworkParametersException;
 import network.Network;
 

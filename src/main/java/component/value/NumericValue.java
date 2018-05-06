@@ -1,4 +1,4 @@
-package component;
+package component.value;
 
 
 public class NumericValue<T extends Number & Comparable<? super T>> extends Value<T> {

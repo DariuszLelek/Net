@@ -1,4 +1,4 @@
-package component;
+package component.value;
 
 import exception.ValueNotInRangeException;
 import org.junit.Assert;
@@ -7,12 +7,13 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 public class ValueTest {
+    public static final double FLOAT_DELTA = 0.1f;
+
     private final Integer inRangeIntegerValue1 = 5;
     private final Integer inRangeIntegerValue2 = 8;
     private final Integer notInRangeIntegerValue = 20;
     private final Integer minIntegerValue = 0;
     private final Integer maxIntegerValue = 13;
-    private final float floatDelta = 0.01f;
 
     private final Value<Boolean> booleanValue = new BooleanValue<>(Boolean.FALSE, Boolean.TRUE);
     private final Value<Integer> integerValue = new NumericValue<>(minIntegerValue, maxIntegerValue);
@@ -40,16 +41,16 @@ public class ValueTest {
     @Test
     public void getNormalizedValue() throws ValueNotInRangeException {
         booleanValue.setValue(Boolean.TRUE);
-        Assert.assertEquals(1.0f, booleanValue.getNormalized(), floatDelta);
+        Assert.assertEquals(1.0f, booleanValue.getNormalized(), FLOAT_DELTA);
         booleanValue.setValue(Boolean.FALSE);
-        Assert.assertEquals(0.0f, booleanValue.getNormalized(), floatDelta);
+        Assert.assertEquals(0.0f, booleanValue.getNormalized(), FLOAT_DELTA);
 
         integerValue.setValue(inRangeIntegerValue1);
         double expected = (double)(inRangeIntegerValue1 - minIntegerValue) / maxIntegerValue - minIntegerValue;
-        Assert.assertEquals(expected, integerValue.getNormalized(), floatDelta);
+        Assert.assertEquals(expected, integerValue.getNormalized(), FLOAT_DELTA);
 
         integerValue.setValue(inRangeIntegerValue2);
         expected = (double)(inRangeIntegerValue2 - minIntegerValue) / maxIntegerValue - minIntegerValue;
-        Assert.assertEquals(expected, integerValue.getNormalized(), floatDelta);
+        Assert.assertEquals(expected, integerValue.getNormalized(), FLOAT_DELTA);
     }
 }

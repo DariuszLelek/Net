@@ -1,4 +1,5 @@
-package component;
+package component.value;
+
 
 public class BooleanValue<T extends Boolean> extends Value<T> {
 

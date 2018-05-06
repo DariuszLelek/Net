@@ -2,6 +2,7 @@ package component.neuron;
 
 import component.Connection;
 import component.ConnectionWeight;
+import component.value.NormalizedValue;
 import component.value.Weight;
 
 import java.util.*;
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 public class Neuron {
     private final ActivationFunctionType activationFunctionType;
     private final ArrayList<ConnectionWeight> inputConnectionWeights = new ArrayList<>();
-    private final Connection outputConnection = new Connection();
+    private final Connection outputConnection = new Connection(new NormalizedValue());
 
     public Neuron(ActivationFunctionType activationFunctionType) {
         this.activationFunctionType = activationFunctionType;
@@ -20,7 +21,7 @@ public class Neuron {
         outputConnection.setValue(ActivationFunction.calculateByNeuronType(
             activationFunctionType,
             inputConnectionWeights.stream()
-                .map(cw -> cw.getConnection().getValue() * cw.getWeight().getNormalized())
+                .map(cw -> cw.getConnection().getValue().getNormalized() * cw.getWeight().getNormalized())
                 .collect(Collectors.toList())));
     }
 
@@ -30,10 +31,6 @@ public class Neuron {
 
     public List<Connection> getInputConnections() {
         return inputConnectionWeights.stream().map(ConnectionWeight::getConnection).collect(Collectors.toList());
-    }
-
-    public List<Weight> getInputWeights(){
-        return inputConnectionWeights.stream().map(ConnectionWeight::getWeight).collect(Collectors.toList());
     }
 
     public ConnectionWeight getConnectionWeight(Connection connection){
@@ -48,6 +45,10 @@ public class Neuron {
     }
 
     public void addInputConnection(Connection connection){
-        inputConnectionWeights.add(new ConnectionWeight(connection, new Weight()));
+        addInputConnectionWeight(new ConnectionWeight(connection, new Weight()));
+    }
+
+    public void addInputConnectionWeight(ConnectionWeight connectionWeight){
+        inputConnectionWeights.add(connectionWeight);
     }
 }

@@ -2,6 +2,7 @@ package component.neuron;
 
 import component.Connection;
 import component.ConnectionWeight;
+import component.value.NormalizedValue;
 import exception.ValueNotInRangeException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,8 +13,8 @@ public class NeuronTest {
     public void getConnectionWeight_notEmpty(){
         Neuron neuron = new Neuron(ActivationFunctionType.NORMALIZED);
 
-        Connection firstInputConnection = new Connection();
-        Connection secondInputConnection = new Connection();
+        Connection firstInputConnection = new Connection(new NormalizedValue());
+        Connection secondInputConnection = new Connection(new NormalizedValue());
 
         neuron.addInputConnection(firstInputConnection);
         neuron.addInputConnection(secondInputConnection);
@@ -29,8 +30,8 @@ public class NeuronTest {
     public void fire() throws ValueNotInRangeException {
         Neuron neuron = new Neuron(ActivationFunctionType.NORMALIZED);
 
-        Connection firstInputConnection = new Connection();
-        Connection secondInputConnection = new Connection();
+        Connection firstInputConnection = new Connection(new NormalizedValue());
+        Connection secondInputConnection = new Connection(new NormalizedValue());
 
         neuron.addInputConnection(firstInputConnection);
         neuron.addInputConnection(secondInputConnection);
@@ -48,6 +49,6 @@ public class NeuronTest {
 
         neuron.fire();
 
-        Assert.assertEquals(expected, neuron.getOutputConnection().getValue(), 0.01d);
+        Assert.assertEquals(expected, neuron.getOutputConnection().getValue().getNormalized(), 0.01d);
     }
 }

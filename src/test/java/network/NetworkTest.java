@@ -3,7 +3,11 @@ package network;
 import component.Connection;
 import component.ConnectionWeight;
 import component.neuron.Neuron;
+import component.value.NormalizedValue;
+import component.value.Value;
+import component.value.Weight;
 import exception.InvalidNetworkParametersException;
+import exception.ValueNotInRangeException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,7 +38,7 @@ public class NetworkTest {
     @Test
     public void layersConnections_neuronsConnected() throws InvalidNetworkParametersException {
         Network network = new Network(inputs, outputs, 3, 4, 1);
-        List<Layer> networkLayers = network.getLayersCopy();
+        List<Layer> networkLayers = network.getLayers();
 
         for(int i=0; i < networkLayers.size() - 1; i++){
             for(Neuron leftNeuron : networkLayers.get(i).getNeurons()){
@@ -53,7 +57,7 @@ public class NetworkTest {
         int expected = inputs * layer1 + layer1 * layer2 + layer2 * outputs;
 
         Network network = new Network(inputs, outputs, layer1, layer2);
-        List<Layer> networkLayers = network.getLayersCopy();
+        List<Layer> networkLayers = network.getLayers();
 
         Collection<ConnectionWeight> connectionWeights = new ArrayList<>();
 
@@ -69,7 +73,7 @@ public class NetworkTest {
     @Test
     public void layersConnections_valuePassedBetweenTwoNeurons() throws InvalidNetworkParametersException {
         Network network = new Network(inputs, outputs, 2);
-        List<Layer> networkLayers = network.getLayersCopy();
+        List<Layer> networkLayers = network.getLayers();
 
         double expected = 0.75d;
         Neuron leftNeuron = networkLayers.get(0).getNeurons().get(0);
@@ -79,8 +83,60 @@ public class NetworkTest {
 
         List<Double> inputConnectionsValues = rightNeuron.getInputConnections().stream()
             .map(Connection::getValue)
+            .map(Value::getNormalized)
             .collect(Collectors.toList());
 
         Assert.assertTrue(inputConnectionsValues.contains(expected));
+    }
+
+    @Test
+    public void randomiseConnectionWeights() throws InvalidNetworkParametersException, CloneNotSupportedException {
+        Network network = new Network(inputs, outputs, 2);
+
+        Collection<Weight> originalWeights = new ArrayList<>();
+
+        for(Layer layer : network.getLayers()){
+            for(Weight weight : layer.getNeuronInputsWeights()){
+                originalWeights.add((Weight) weight.clone());
+            }
+        }
+
+        network.randomiseConnectionWeights();
+
+        Collection<Weight> randomizedWeights = new ArrayList<>();
+
+        for(Layer layer : network.getLayers()){
+            randomizedWeights.addAll(layer.getNeuronInputsWeights());
+        }
+
+        Assert.assertNotEquals(originalWeights, randomizedWeights);
+    }
+
+    @Test
+    public void produceOutputs() throws InvalidNetworkParametersException, ValueNotInRangeException, CloneNotSupportedException {
+        Network network = new Network(inputs, outputs, 2);
+
+        ArrayList<Value> inputValues = new ArrayList<>(inputs);
+
+        Value<Double> inputValue1 = new NormalizedValue();
+        Value<Double> inputValue2 = new NormalizedValue();
+
+        inputValue1.setValue(0.6d);
+        inputValue1.setValue(0.2d);
+
+        inputValues.add(inputValue1);
+        inputValues.add(inputValue2);
+
+        Collection<Value> initialOutputValues = new ArrayList<>();
+
+        for(Value value : network.getOutputValues()){
+            initialOutputValues.add((Value) value.clone());
+        }
+
+        network.randomiseConnectionWeights();
+
+        Collection<Value> outputValues = network.produceOutputValues(inputValues);
+
+        Assert.assertNotEquals(outputValues, initialOutputValues);
     }
 }

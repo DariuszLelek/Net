@@ -9,7 +9,7 @@ public class BooleanValue<T extends Boolean> extends Value<T> {
 
     @Override
     protected void updateNormalized(T value) {
-
+        normalized = Boolean.TRUE.equals(value) ? 1.0f : 0.0f;
     }
 
 }

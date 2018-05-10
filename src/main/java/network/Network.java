@@ -70,6 +70,10 @@ public class Network {
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    public ArrayList<Layer> getLayersCopy() {
+        return new ArrayList<>(layers);
+    }
+
     public void fire(){
         fireLayersNeurons();
         updateOutput();

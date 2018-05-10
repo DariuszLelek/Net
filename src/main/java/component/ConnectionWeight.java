@@ -4,7 +4,7 @@ import component.value.NormalizedValue;
 import component.value.Weight;
 
 public class ConnectionWeight {
-    public static final ConnectionWeight EMPTY = new ConnectionWeight(new Connection(new NormalizedValue()), new Weight());
+    public static final ConnectionWeight EMPTY = new ConnectionWeight(new Connection(), new Weight());
 
     private final Connection connection;
     private final Weight weight;

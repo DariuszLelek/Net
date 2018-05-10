@@ -1,22 +1,18 @@
 package component;
 
-import component.value.Value;
+import component.value.NormalizedValue;
 import exception.ValueNotInRangeException;
 
 public class Connection {
-    private final Value<Double> value;
+    private final NormalizedValue normalizedValue = new NormalizedValue();
 
-    public Connection(Value<Double> value) {
-        this.value = value;
+    public NormalizedValue getNormalizedValue() {
+        return normalizedValue;
     }
 
-    public Value getValue() {
-        return value;
-    }
-
-    public void setValue(double value){
+    public void setNormalized(double normalized){
         try {
-            this.value.setValue(value);
+            this.normalizedValue.set(normalized);
         } catch (ValueNotInRangeException e) {
             e.printStackTrace();
         }

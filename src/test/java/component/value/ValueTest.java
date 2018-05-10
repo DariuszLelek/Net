@@ -23,33 +23,33 @@ public class ValueTest {
 
     @Test(expected = ValueNotInRangeException.class)
     public void setValue_exception() throws ValueNotInRangeException {
-        integerValue.setValue(notInRangeIntegerValue);
+        integerValue.set(notInRangeIntegerValue);
     }
 
     @Test
     public void getValue() throws ValueNotInRangeException {
         Assert.assertEquals(Boolean.FALSE, booleanValue.get());
 
-        booleanValue.setValue(Boolean.TRUE);
+        booleanValue.set(Boolean.TRUE);
         Assert.assertEquals(Boolean.TRUE, booleanValue.get());
 
         Assert.assertEquals(minIntegerValue, integerValue.get());
-        integerValue.setValue(inRangeIntegerValue1);
+        integerValue.set(inRangeIntegerValue1);
         Assert.assertEquals(inRangeIntegerValue1, integerValue.get());
     }
 
     @Test
     public void getNormalizedValue() throws ValueNotInRangeException {
-        booleanValue.setValue(Boolean.TRUE);
+        booleanValue.set(Boolean.TRUE);
         Assert.assertEquals(1.0f, booleanValue.getNormalized(), FLOAT_DELTA);
-        booleanValue.setValue(Boolean.FALSE);
+        booleanValue.set(Boolean.FALSE);
         Assert.assertEquals(0.0f, booleanValue.getNormalized(), FLOAT_DELTA);
 
-        integerValue.setValue(inRangeIntegerValue1);
+        integerValue.set(inRangeIntegerValue1);
         double expected = (double)(inRangeIntegerValue1 - minIntegerValue) / maxIntegerValue - minIntegerValue;
         Assert.assertEquals(expected, integerValue.getNormalized(), FLOAT_DELTA);
 
-        integerValue.setValue(inRangeIntegerValue2);
+        integerValue.set(inRangeIntegerValue2);
         expected = (double)(inRangeIntegerValue2 - minIntegerValue) / maxIntegerValue - minIntegerValue;
         Assert.assertEquals(expected, integerValue.getNormalized(), FLOAT_DELTA);
     }

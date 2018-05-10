@@ -1,17 +1,13 @@
 package component.neuron;
 
+import component.value.NormalizedValue;
+
 import java.util.List;
 
 public class ActivationFunction {
 
-    public static double calculateByNeuronType(ActivationFunctionType functionType, List<Double> values){
-        switch (functionType){
-            case SIGMOID:
-                return values.stream().mapToDouble(ActivationFunction::calculateSigmoid).sum() / values.size();
-            case NORMALIZED:
-            default:
-                return values.stream().mapToDouble(Double::doubleValue).sum() / values.size();
-        }
+    public static double calculateNormalized(List<Double> values){
+        return values.stream().mapToDouble(Double::doubleValue).sum() / values.size();
     }
 
     private static double calculateSigmoid(double value){

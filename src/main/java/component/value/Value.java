@@ -5,8 +5,8 @@ import exception.ValueNotInRangeException;
 public abstract class Value<T extends Comparable<? super T>> implements Cloneable{
     final T min;
     final T max;
-    private T value;
-    double normalizedValue;
+    protected T value;
+    double normalized;
 
     Value(T min, T max) {
         this.min = min;
@@ -27,23 +27,23 @@ public abstract class Value<T extends Comparable<? super T>> implements Cloneabl
         return value;
     }
 
-    public void setValue(T value) throws ValueNotInRangeException {
+    public void set(T value) throws ValueNotInRangeException {
         if(isInRange(value)){
             this.value = value;
-            updateNormalizedValue(value);
+            updateNormalized(value);
         }else{
             throw new ValueNotInRangeException("Value [" + value + "] not in range [" + min + "-" + max + "]");
         }
     }
 
+    protected abstract void updateNormalized(T value);
+
     private boolean isInRange(T value){
         return value.compareTo(min) >= 0 && value.compareTo(max) <= 0;
     }
 
-    protected abstract void updateNormalizedValue(T value);
-
     public double getNormalized(){
-        return normalizedValue;
+        return normalized;
     }
 
     @Override
@@ -58,7 +58,7 @@ public abstract class Value<T extends Comparable<? super T>> implements Cloneabl
 
         Value<?> value1 = (Value<?>) o;
 
-        if (Double.compare(value1.normalizedValue, normalizedValue) != 0) return false;
+        if (Double.compare(value1.normalized, normalized) != 0) return false;
         if (!min.equals(value1.min)) return false;
         if (!max.equals(value1.max)) return false;
         return value.equals(value1.value);
@@ -71,7 +71,7 @@ public abstract class Value<T extends Comparable<? super T>> implements Cloneabl
         result = min.hashCode();
         result = 31 * result + max.hashCode();
         result = 31 * result + value.hashCode();
-        temp = Double.doubleToLongBits(normalizedValue);
+        temp = Double.doubleToLongBits(normalized);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }

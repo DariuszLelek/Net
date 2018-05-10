@@ -15,12 +15,12 @@ import java.util.stream.IntStream;
 public class Layer {
     private final ArrayList<Neuron> neurons;
 
-    public Layer(int neuronsNumber, ActivationFunctionType activationFunctionType) {
-        neurons = createNeurons(neuronsNumber, activationFunctionType);
+    public Layer(int neuronsNumber) {
+        neurons = createNeurons(neuronsNumber);
     }
 
-    private ArrayList<Neuron> createNeurons(int neuronsNumber, ActivationFunctionType activationFunctionType){
-        return IntStream.range(0, neuronsNumber).mapToObj(i -> new Neuron(activationFunctionType)).collect(Collectors.toCollection(ArrayList::new));
+    private ArrayList<Neuron> createNeurons(int neuronsNumber){
+        return IntStream.range(0, neuronsNumber).mapToObj(i -> new Neuron()).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<Neuron> getNeurons() {
@@ -28,7 +28,9 @@ public class Layer {
     }
 
     public void fireNeurons(){
-        neurons.forEach(Neuron::fire);
+        for(Neuron neuron : neurons){
+            neuron.fire();
+        }
     }
 
     public Collection<Connection> getNeuronsOutputConnections(){

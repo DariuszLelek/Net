@@ -3,26 +3,24 @@ package component.neuron;
 import component.Connection;
 import component.ConnectionWeight;
 import component.value.NormalizedValue;
+import component.value.Value;
 import component.value.Weight;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Neuron {
-    private final ActivationFunctionType activationFunctionType;
     private final ArrayList<ConnectionWeight> inputConnectionWeights = new ArrayList<>();
-    private final Connection outputConnection = new Connection(new NormalizedValue());
-
-    public Neuron(ActivationFunctionType activationFunctionType) {
-        this.activationFunctionType = activationFunctionType;
-    }
+    private final Connection outputConnection = new Connection();
+    // TODO add sigmoid
 
     public void fire() {
-        outputConnection.setValue(ActivationFunction.calculateByNeuronType(
-            activationFunctionType,
+        outputConnection.setNormalized(ActivationFunction.calculateNormalized(
             inputConnectionWeights.stream()
-                .map(cw -> cw.getConnection().getValue().getNormalized() * cw.getWeight().getNormalized())
+                .map(cw -> cw.getConnection().getNormalizedValue().getNormalized() * cw.getWeight().getNormalized())
                 .collect(Collectors.toList())));
+
+        System.out.println();
     }
 
     public ArrayList<ConnectionWeight> getInputConnectionWeights() {

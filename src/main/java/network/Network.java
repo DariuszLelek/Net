@@ -3,6 +3,7 @@ package network;
 import component.Connection;
 import component.ConnectionWeight;
 import component.neuron.Neuron;
+import component.value.Bias;
 import component.value.Weight;
 import exception.InvalidNetworkParametersException;
 import exception.ValueNotInRangeException;
@@ -83,22 +84,29 @@ public class Network {
             .forEach(i -> connectLayersNeurons(layers.get(i), layers.get(i + 1)));
     }
 
-    public void randomiseConnectionWeights(){
+    public void randomiseConnectionsWeight(){
         Random random = new Random();
 
-        for(Layer layer : layers){
-            for(Neuron neuron : layer.getNeurons()){
-                for(ConnectionWeight cw : neuron.getInputConnectionWeights()){
-                    try {
-                        cw.getWeight().set(Weight.MAX_WEIGHT * random.nextDouble());
-                    } catch (ValueNotInRangeException e) {
-                        e.printStackTrace();
-                    }
-                }
+        layers.stream().forEach(layer -> layer.getNeurons().stream().forEach(neuron -> neuron.getInputConnectionWeights().forEach(cw ->
+        {
+            try {
+                cw.getWeight().set(Weight.MAX_WEIGHT * random.nextDouble());
+            } catch (ValueNotInRangeException e) {
+                e.printStackTrace();
             }
-        }
+        })));
+    }
 
-        System.out.println();
+    public void randomiseNeuronsBias(){
+        Random random = new Random();
+
+        layers.forEach(layer -> layer.getNeurons().forEach(neuron -> {
+            try {
+                neuron.getBias().set(Bias.MAX_VALUE * random.nextDouble());
+            } catch (ValueNotInRangeException e) {
+                e.printStackTrace();
+            }
+        }));
     }
 
     private void connectLayersNeurons(Layer leftLayer, Layer rightLayer){

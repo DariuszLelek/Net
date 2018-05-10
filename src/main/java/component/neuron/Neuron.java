@@ -2,6 +2,7 @@ package component.neuron;
 
 import component.Connection;
 import component.ConnectionWeight;
+import component.value.Bias;
 import component.value.NormalizedValue;
 import component.value.Value;
 import component.value.Weight;
@@ -12,15 +13,13 @@ import java.util.stream.Collectors;
 public class Neuron {
     private final ArrayList<ConnectionWeight> inputConnectionWeights = new ArrayList<>();
     private final Connection outputConnection = new Connection();
-    // TODO add sigmoid
+    private final Bias bias = new Bias();
 
     public void fire() {
         outputConnection.setNormalized(ActivationFunction.calculateNormalized(
             inputConnectionWeights.stream()
                 .map(cw -> cw.getConnection().getNormalizedValue().getNormalized() * cw.getWeight().getNormalized())
-                .collect(Collectors.toList())));
-
-        System.out.println();
+                .collect(Collectors.toList()), bias));
     }
 
     public ArrayList<ConnectionWeight> getInputConnectionWeights() {
@@ -36,6 +35,10 @@ public class Neuron {
             .filter(cw -> connection.equals(cw.getConnection()))
             .findFirst()
             .orElse(ConnectionWeight.EMPTY);
+    }
+
+    public Bias getBias() {
+        return bias;
     }
 
     public Connection getOutputConnection() {

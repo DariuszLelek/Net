@@ -91,7 +91,7 @@ public class NetworkTest {
 //    }
 //
 //    @Test
-//    public void randomiseConnectionWeights() throws InvalidNetworkParametersException, CloneNotSupportedException {
+//    public void randomiseConnectionsWeight() throws InvalidNetworkParametersException, CloneNotSupportedException {
 //        Network network = new Network(inputs, outputs, 2);
 //
 //        Collection<Weight> originalWeights = new ArrayList<>();
@@ -102,7 +102,7 @@ public class NetworkTest {
 //            }
 //        }
 //
-//        network.randomiseConnectionWeights();
+//        network.randomiseConnectionsWeight();
 //
 //        Collection<Weight> randomizedWeights = new ArrayList<>();
 //
@@ -130,7 +130,7 @@ public class NetworkTest {
 //            initialOutputValues.add((Value) value.clone());
 //        }
 //
-//        network.randomiseConnectionWeights();
+//        network.randomiseConnectionsWeight();
 //        network.fire();
 //
 //        Collection<AccessValue> outputValues = network.getOutputs();
@@ -145,8 +145,8 @@ public class NetworkTest {
 
         AccessValue value1 = new AccessValue("input1", 0.0d, 10.0d);
         AccessValue value2 = new AccessValue("input2", 0.0d, 25.0d);
-        value1.set(10.0d);
-        value2.set(25.0d);
+        value1.set(6.0d);
+        value2.set(12.0d);
 
         input.addBorderValue(value1);
         input.addBorderValue(value2);
@@ -154,16 +154,15 @@ public class NetworkTest {
         output.addBorderValue(new AccessValue("output1", 0.0d, 10.0d));
 
         Network network = new Network(input, output);
-        network.randomiseConnectionWeights();
+        network.randomiseConnectionsWeight();
+        network.randomiseNeuronsBias();
 
         output = network.getOutput(input);
 
         for (int i =0 ; i<10; i++){
-            network.randomiseConnectionWeights();
+            network.randomiseConnectionsWeight();
             System.out.println(network.getOutput(input).getAccessValues().get(0).get());
         }
-
-        System.out.println("");
 
 //        Assert.assertNotEquals(outputValues, initialOutputValues);
     }

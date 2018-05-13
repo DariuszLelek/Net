@@ -4,6 +4,7 @@ import component.value.normalized.Connection;
 import component.neuron.Neuron;
 import component.value.normalized.Bias;
 import component.value.normalized.Weight;
+import exception.InvalidNetworkInputException;
 import exception.InvalidNetworkParametersException;
 
 import java.util.*;
@@ -42,14 +43,18 @@ public class Network {
         inputLayer.getNeurons().forEach(neuron -> neuron.addInputConnection(new Connection()));
     }
 
-    public Transput getOutput(final Transput input) {
-        assert input.size() == getInputLayer().getNeurons().size() && this.input.equals(input);
-        IntStream.range(0, input.size())
-            .forEach(i -> getInputLayer().getNeurons().get(i)
-                .getInputConnections().get(0)
-                .setFromNormalized(input.getTransputValues().get(i).getNormalized()));
-        fire();
-        return output;
+    public Transput getOutput(final Transput input) throws InvalidNetworkInputException {
+        if (this.input.equals(input)) {
+            IntStream.range(0, input.size())
+                .forEach(i -> getInputLayer().getNeurons().get(i)
+                    .getInputConnections().get(0)
+                    .setFromNormalized(input.getTransputValues().get(i).getNormalized()));
+            fire();
+            return output;
+        } else {
+            throw new InvalidNetworkInputException("Input object used for network creation [" + this.input +
+            "] is not equal to the object passed [" + input + "]. Cannot get Network output for not matching input.");
+        }
     }
 
     private Layer getInputLayer(){

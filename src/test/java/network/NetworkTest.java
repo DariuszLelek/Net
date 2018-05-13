@@ -6,6 +6,7 @@ import component.neuron.Neuron;
 import component.value.TransputValue;
 import component.value.normalized.NormalizedValue;
 import component.value.normalized.Weight;
+import exception.InvalidNetworkInputException;
 import exception.InvalidNetworkParametersException;
 import exception.ValueNotInRangeException;
 import org.junit.Assert;
@@ -106,7 +107,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void randomiseConnectionsWeight() throws InvalidNetworkParametersException, CloneNotSupportedException {
+    public void randomiseConnectionsWeight() throws InvalidNetworkParametersException {
         Network network = new Network(input, output, neuronsByLayer);
 
         Collection<Weight> originalWeights = new ArrayList<>();
@@ -127,7 +128,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void getOutputs_sameInputs() throws InvalidNetworkParametersException, ValueNotInRangeException, CloneNotSupportedException {
+    public void getOutputs_sameInputs() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
         Transput input = new Transput();
 
         TransputValue value1 = new TransputValue("input1", 0.0d, 10.0d);
@@ -152,8 +153,24 @@ public class NetworkTest {
         Assert.assertEquals(output.getTransputValues().get(1).getValue(), output2, NormalizedValue.FLOAT_DELTA);
     }
 
+    @Test(expected = InvalidNetworkInputException.class)
+    public void getOutputs_differentInputs() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
+        Transput input1 = new Transput();
+        Transput input2 = new Transput();
+
+        input1.addTransputValue(new TransputValue("input1", 0.0d, 10.0d));
+        input1.addTransputValue(new TransputValue("input2", 0.0d, 10.0d));
+
+        input2.addTransputValue(new TransputValue("input3", 0.0d, 10.0d));
+        input2.addTransputValue(new TransputValue("input4", 0.0d, 10.0d));
+
+        Network network = new Network(input1, this.output, neuronsByLayer);
+
+        network.getOutput(input2);
+    }
+
     @Test
-    public void getOutputs_differentInputs() throws InvalidNetworkParametersException, ValueNotInRangeException, CloneNotSupportedException {
+    public void getOutputs_differentInputValues() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
         Transput input = new Transput();
 
         TransputValue value1 = new TransputValue("input1", 0.0d, 10.0d);
@@ -185,7 +202,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void getOutputs_inRange() throws InvalidNetworkParametersException, ValueNotInRangeException, CloneNotSupportedException {
+    public void getOutputs_inRange() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
         Transput input = new Transput();
         Transput output = new Transput();
 

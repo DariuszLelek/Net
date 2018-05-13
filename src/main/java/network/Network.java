@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Network {
-    private final Layer inputLayer;
-    private final Layer outputLayer;
     private final Transput input;
     private final Transput output;
     private final ArrayList<Layer> layers = new ArrayList<>();
@@ -29,14 +27,11 @@ public class Network {
             throw new InvalidNetworkParametersException(invalidParametersMessage);
         }
 
-        inputLayer = new Layer(String.valueOf(layers.size()) ,input.size());
-        layers.add(inputLayer);
-        ArrayList<Layer> hiddenLayers = createHiddenLayers(neuronsByLayer);
-        layers.addAll(hiddenLayers);
-        outputLayer = new Layer(String.valueOf(layers.size()), output.size());
-        layers.add(outputLayer);
+        layers.add(new Layer(String.valueOf(layers.size()) ,input.size()));
+        layers.addAll(createHiddenLayers(neuronsByLayer));
+        layers.add(new Layer(String.valueOf(layers.size()), output.size()));
 
-        createInputConnections(inputLayer);
+        createInputConnections(getInputLayer());
         connectLayers(layers);
 
         randomiseConnectionsWeight();
@@ -48,20 +43,28 @@ public class Network {
     }
 
     public Transput getOutput(final Transput input) {
-        assert input.size() == inputLayer.getNeurons().size() && this.input.equals(input);
+        assert input.size() == getInputLayer().getNeurons().size() && this.input.equals(input);
         IntStream.range(0, input.size())
-            .forEach(i -> inputLayer.getNeurons().get(i)
+            .forEach(i -> getInputLayer().getNeurons().get(i)
                 .getInputConnections().get(0)
                 .setFromNormalized(input.getTransputValues().get(i).getNormalized()));
         fire();
         return output;
     }
 
+    private Layer getInputLayer(){
+        return layers.get(0);
+    }
+
+    private Layer getOutputLayer(){
+        return layers.get(layers.size() - 1);
+    }
+
     private void updateOutput() {
         IntStream.range(0, output.size())
             .forEach(i -> output.getTransputValues().get(i)
                 .setFromNormalizedValue(
-                    outputLayer.getNeurons().get(i)
+                    getOutputLayer().getNeurons().get(i)
                         .getOutputConnection()));
     }
 

@@ -1,12 +1,10 @@
 package network;
 
-import component.Connection;
-import component.ConnectionWeight;
+import component.value.normalized.Connection;
 import component.neuron.Neuron;
-import component.value.Bias;
-import component.value.Weight;
+import component.value.normalized.Bias;
+import component.value.normalized.Weight;
 import exception.InvalidNetworkParametersException;
-import exception.ValueNotInRangeException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -15,58 +13,61 @@ import java.util.stream.IntStream;
 public class Network {
     private final Layer inputLayer;
     private final Layer outputLayer;
-    private final Access input;
-    private final Access output;
+    private final Transput input;
+    private final Transput output;
     private final ArrayList<Layer> layers = new ArrayList<>();
+    private final Random random = new Random();
 
-    public Network(Access input, Access output, int... neuronsByLayer) throws InvalidNetworkParametersException {
+    public Network(Transput input, Transput output, int... neuronsByLayer) throws InvalidNetworkParametersException {
         this.input = input;
         this.output = output;
 
-        if(!isValid(input.size(), output.size(), neuronsByLayer)){
+        if (!isValid(input.size(), output.size(), neuronsByLayer)) {
             String invalidParametersMessage = "Cannot construct network with given parameters: " +
                 "inputs = " + input.size() + " outputs = " + output.size() +
                 " neuronsByLayer = " + String.join(",", Arrays.toString(neuronsByLayer));
             throw new InvalidNetworkParametersException(invalidParametersMessage);
         }
 
-        inputLayer = new Layer(input.size());
-        outputLayer = new Layer(output.size());
-        ArrayList<Layer> hiddenLayers = createHiddenLayers(neuronsByLayer);
-
+        inputLayer = new Layer(String.valueOf(layers.size()) ,input.size());
         layers.add(inputLayer);
+        ArrayList<Layer> hiddenLayers = createHiddenLayers(neuronsByLayer);
         layers.addAll(hiddenLayers);
+        outputLayer = new Layer(String.valueOf(layers.size()), output.size());
         layers.add(outputLayer);
 
         createInputConnections(inputLayer);
         connectLayers(layers);
+
+        randomiseConnectionsWeight();
+        randomiseNeuronsBias();
     }
 
-    private void createInputConnections(Layer inputLayer){
+    private void createInputConnections(Layer inputLayer) {
         inputLayer.getNeurons().forEach(neuron -> neuron.addInputConnection(new Connection()));
     }
 
-    public Access getOutput(final Access input){
-        // TODO: add check if input is same as used for network creation
+    public Transput getOutput(final Transput input) {
         assert input.size() == inputLayer.getNeurons().size() && this.input.equals(input);
         IntStream.range(0, input.size())
-                .forEach(i -> inputLayer.getNeurons().get(i).getInputConnections().get(0).setNormalized(input.getAccessValues().get(i).getNormalized()));
+            .forEach(i -> inputLayer.getNeurons().get(i)
+                .getInputConnections().get(0)
+                .setFromNormalized(input.getTransputValues().get(i).getNormalized()));
         fire();
         return output;
     }
 
     private void updateOutput() {
         IntStream.range(0, output.size())
-                .forEach(i -> output.getAccessValues().get(i)
-                        .setFromNormalizedValue(
-                                outputLayer.getNeurons().get(i)
-                                        .getOutputConnection()
-                                        .getNormalizedValue()));
+            .forEach(i -> output.getTransputValues().get(i)
+                .setFromNormalizedValue(
+                    outputLayer.getNeurons().get(i)
+                        .getOutputConnection()));
     }
 
-    private ArrayList<Layer> createHiddenLayers(int... neuronsByLayer){
+    private ArrayList<Layer> createHiddenLayers(int... neuronsByLayer) {
         return IntStream.of(neuronsByLayer)
-            .mapToObj(Layer::new)
+            .mapToObj(neurons -> new Layer(String.valueOf(layers.size()), neurons))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -74,48 +75,36 @@ public class Network {
         return new ArrayList<>(layers);
     }
 
-    public void fire(){
+    public void fire() {
         fireLayersNeurons();
         updateOutput();
     }
 
-    private void fireLayersNeurons(){
+    private void fireLayersNeurons() {
         layers.forEach(Layer::fireNeurons);
     }
 
-    private void connectLayers(ArrayList<Layer> layers){
+    private void connectLayers(ArrayList<Layer> layers) {
         IntStream.range(0, layers.size() - 1)
             .forEach(i -> connectLayersNeurons(layers.get(i), layers.get(i + 1)));
     }
 
-    public void randomiseConnectionsWeight(){
-        Random random = new Random();
-
-        layers.stream().forEach(layer -> layer.getNeurons().stream().forEach(neuron -> neuron.getInputConnectionWeights().forEach(cw ->
-        {
-            try {
-                cw.getWeight().set(Weight.MAX_WEIGHT * random.nextDouble());
-            } catch (ValueNotInRangeException e) {
-                e.printStackTrace();
-            }
-        })));
+    public void randomiseConnectionsWeight() {
+        layers.forEach(layer ->
+            layer.getNeurons().forEach(neuron ->
+                neuron.getInputConnectionWeights()
+                    .forEach(cw -> cw.getWeight().setFromNormalized(Weight.MAX_VALUE * random.nextDouble()))));
     }
 
-    public void randomiseNeuronsBias(){
-        Random random = new Random();
-
-        layers.forEach(layer -> layer.getNeurons().forEach(neuron -> {
-            try {
-                neuron.getBias().set(Bias.MAX_VALUE * random.nextDouble());
-            } catch (ValueNotInRangeException e) {
-                e.printStackTrace();
-            }
-        }));
+    private void randomiseNeuronsBias() {
+        layers.forEach(layer ->
+            layer.getNeurons().forEach(neuron ->
+                neuron.getBias().setFromNormalized(Bias.MAX_VALUE * random.nextDouble())));
     }
 
-    private void connectLayersNeurons(Layer leftLayer, Layer rightLayer){
-        for(Neuron leftLayerNeuron : leftLayer.getNeurons()){
-            for(Neuron rightLayerNeuron : rightLayer.getNeurons()){
+    private void connectLayersNeurons(Layer leftLayer, Layer rightLayer) {
+        for (Neuron leftLayerNeuron : leftLayer.getNeurons()) {
+            for (Neuron rightLayerNeuron : rightLayer.getNeurons()) {
                 rightLayerNeuron.addInputConnection(leftLayerNeuron.getOutputConnection());
             }
         }

@@ -1,26 +1,27 @@
 package network;
 
-import component.Connection;
 import component.ConnectionWeight;
-import component.neuron.ActivationFunctionType;
 import component.neuron.Neuron;
-import component.value.Weight;
+import component.value.normalized.Weight;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Layer {
+    private final String id;
     private final ArrayList<Neuron> neurons;
 
-    public Layer(int neuronsNumber) {
+    public Layer(String id, int neuronsNumber) {
+        this.id = id;
         neurons = createNeurons(neuronsNumber);
     }
 
     private ArrayList<Neuron> createNeurons(int neuronsNumber){
-        return IntStream.range(0, neuronsNumber).mapToObj(i -> new Neuron()).collect(Collectors.toCollection(ArrayList::new));
+        return IntStream.range(0, neuronsNumber)
+            .mapToObj(i -> new Neuron(id + "-" + String.valueOf(i)))
+            .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public ArrayList<Neuron> getNeurons() {
@@ -28,13 +29,7 @@ public class Layer {
     }
 
     public void fireNeurons(){
-        for(Neuron neuron : neurons){
-            neuron.fire();
-        }
-    }
-
-    public Collection<Connection> getNeuronsOutputConnections(){
-        return neurons.stream().map(Neuron::getOutputConnection).collect(Collectors.toList());
+        neurons.forEach(Neuron::fire);
     }
 
     public List<Weight> getNeuronInputsWeights(){

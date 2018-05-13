@@ -1,8 +1,7 @@
 package component.neuron;
 
-import component.Connection;
+import component.value.normalized.Connection;
 import component.ConnectionWeight;
-import component.value.NormalizedValue;
 import exception.ValueNotInRangeException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,13 +41,13 @@ public class NeuronTest {
         double connectionValue2 = 0.9d;
         double expected = (weight1 * connectionValue1 + weight2 * connectionValue2) / neuron.getInputConnections().size();
 
-        neuron.getConnectionWeight(firstInputConnection).getWeight().set(weight1);
-        neuron.getConnectionWeight(firstInputConnection).getConnection().setNormalized(connectionValue1);
-        neuron.getConnectionWeight(secondInputConnection).getWeight().set(weight2);
-        neuron.getConnectionWeight(secondInputConnection).getConnection().setNormalized(connectionValue2);
+        neuron.getConnectionWeight(firstInputConnection).getWeight().setFromNormalized(weight1);
+        neuron.getConnectionWeight(firstInputConnection).getConnection().setFromNormalized(connectionValue1);
+        neuron.getConnectionWeight(secondInputConnection).getWeight().setFromNormalized(weight2);
+        neuron.getConnectionWeight(secondInputConnection).getConnection().setFromNormalized(connectionValue2);
 
         neuron.fire();
 
-        Assert.assertEquals(expected, neuron.getOutputConnection().getNormalizedValue().getNormalized(), 0.01d);
+        Assert.assertEquals(expected, neuron.getOutputConnection().getNormalized(), 0.01d);
     }
 }

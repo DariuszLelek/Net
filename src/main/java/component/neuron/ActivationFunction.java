@@ -1,6 +1,6 @@
 package component.neuron;
 
-import component.value.Bias;
+import component.value.normalized.Bias;
 
 import java.util.List;
 

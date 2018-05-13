@@ -1,7 +1,7 @@
 package component;
 
-import component.value.NormalizedValue;
-import component.value.Weight;
+import component.value.normalized.Connection;
+import component.value.normalized.Weight;
 
 public class ConnectionWeight {
     public static final ConnectionWeight EMPTY = new ConnectionWeight(new Connection(), new Weight());
@@ -20,5 +20,10 @@ public class ConnectionWeight {
 
     public Weight getWeight() {
         return weight;
+    }
+
+    @Override
+    public String toString() {
+        return "ConnectionWeight{" + connection + ", " + weight + '}';
     }
 }

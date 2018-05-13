@@ -1,25 +1,36 @@
 package component.neuron;
 
-import component.Connection;
+import component.value.normalized.Connection;
 import component.ConnectionWeight;
-import component.value.Bias;
-import component.value.NormalizedValue;
-import component.value.Value;
-import component.value.Weight;
+import component.value.normalized.Bias;
+import component.value.normalized.Weight;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Neuron {
+    private final String id;
+
     private final ArrayList<ConnectionWeight> inputConnectionWeights = new ArrayList<>();
     private final Connection outputConnection = new Connection();
     private final Bias bias = new Bias();
 
+    public Neuron() {
+        id = "NO_ID";
+    }
+
+    public Neuron(String id) {
+        this.id = id;
+    }
+
     public void fire() {
-        outputConnection.setNormalized(ActivationFunction.calculateNormalized(
+        outputConnection.setFromNormalized(ActivationFunction.calculateNormalized(
             inputConnectionWeights.stream()
-                .map(cw -> cw.getConnection().getNormalizedValue().getNormalized() * cw.getWeight().getNormalized())
+                .map(cw -> cw.getConnection().getNormalized() * cw.getWeight().getNormalized())
                 .collect(Collectors.toList()), bias));
+
+        // TODO add logging
+//        System.out.println(toString());
     }
 
     public ArrayList<ConnectionWeight> getInputConnectionWeights() {
@@ -51,5 +62,15 @@ public class Neuron {
 
     public void addInputConnectionWeight(ConnectionWeight connectionWeight){
         inputConnectionWeights.add(connectionWeight);
+    }
+
+    @Override
+    public String toString() {
+        return "Neuron{" +
+            "id=" + id +
+            ", inputConnectionWeights=" + inputConnectionWeights +
+            ", outputConnection=" + outputConnection +
+            ", bias=" + bias +
+            '}';
     }
 }

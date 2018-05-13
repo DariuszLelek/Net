@@ -18,7 +18,7 @@ public class Network {
     private final ArrayList<Layer> layers = new ArrayList<>();
     private final Random random = new Random();
 
-    public Network(Transput input, Transput output, int... neuronsByLayer) throws InvalidNetworkParametersException {
+    public Network(Transput input, Transput output, int[] neuronsByLayer) throws InvalidNetworkParametersException {
         this.input = input;
         this.output = output;
 

@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class NetworkTest {
     private final Transput input = new Transput();
     private final Transput output = new Transput();
+    private final int[] neuronsByLayer = new int[]{2};
 
     @Before
     public void setUp() throws Exception {
@@ -31,22 +32,29 @@ public class NetworkTest {
 
     @Test(expected = InvalidNetworkParametersException.class)
     public void invalidNetwork_invalidInputs() throws InvalidNetworkParametersException {
-        new Network(new Transput(), output,1);
+        new Network(new Transput(), output, new int[]{1});
     }
 
     @Test(expected = InvalidNetworkParametersException.class)
     public void invalidNetwork_invalidOutputs() throws InvalidNetworkParametersException {
-        new Network(input,new Transput(),1);
+        new Network(input,new Transput(), new int[]{1});
     }
 
     @Test(expected = InvalidNetworkParametersException.class)
     public void invalidNetwork_invalidNeuronsByLayer() throws InvalidNetworkParametersException {
-        new Network(input, output,1, 0);
+        new Network(input, output, new int[]{1, 0});
+    }
+
+    @Test
+    public void invalidNetwork_valid() throws InvalidNetworkParametersException {
+        new Network(input, output, new int[]{1});
+        new Network(input, output, new int[]{});
+        new Network(input, output, new int[]{5, 2});
     }
 
     @Test
     public void layersConnections_neuronsConnected() throws InvalidNetworkParametersException {
-        Network network = new Network(input, output, 3, 4, 1);
+        Network network = new Network(input, output,  new int[]{3, 4, 1});
         List<Layer> networkLayers = network.getLayersCopy();
 
         for(int i=0; i < networkLayers.size() - 1; i++){
@@ -65,7 +73,7 @@ public class NetworkTest {
         int layer2 = 2;
         int expected = input.size() * layer1 + layer1 * layer2 + layer2 * output.size();
 
-        Network network = new Network(input, output, layer1, layer2);
+        Network network = new Network(input, output, new int[]{layer1, layer2});
         List<Layer> networkLayers = network.getLayersCopy();
 
         Collection<ConnectionWeight> connectionWeights = new ArrayList<>();
@@ -81,7 +89,7 @@ public class NetworkTest {
 
     @Test
     public void layersConnections_valuePassedBetweenTwoNeurons() throws InvalidNetworkParametersException {
-        Network network = new Network(input, output, 2);
+        Network network = new Network(input, output, neuronsByLayer);
         List<Layer> networkLayers = network.getLayersCopy();
 
         double expected = 0.75d;
@@ -99,7 +107,7 @@ public class NetworkTest {
 
     @Test
     public void randomiseConnectionsWeight() throws InvalidNetworkParametersException, CloneNotSupportedException {
-        Network network = new Network(input, output, 2);
+        Network network = new Network(input, output, neuronsByLayer);
 
         Collection<Weight> originalWeights = new ArrayList<>();
 
@@ -109,7 +117,7 @@ public class NetworkTest {
 
         Collection<Weight> randomizedWeights = new ArrayList<>();
 
-        network = new Network(input, output, 2);
+        network = new Network(input, output, neuronsByLayer);
 
         for(Layer layer : network.getLayersCopy()){
             randomizedWeights.addAll(layer.getNeuronInputsWeights());
@@ -131,7 +139,7 @@ public class NetworkTest {
         input.addTransputValue(value1);
         input.addTransputValue(value2);
 
-        Network network = new Network(input, this.output, 2);
+        Network network = new Network(input, this.output, neuronsByLayer);
 
         Transput output = network.getOutput(input);
 
@@ -157,7 +165,7 @@ public class NetworkTest {
         input.addTransputValue(value1);
         input.addTransputValue(value2);
 
-        Network network = new Network(input, this.output, 2);
+        Network network = new Network(input, this.output, neuronsByLayer);
 
         Transput output = network.getOutput(input);
 
@@ -198,7 +206,7 @@ public class NetworkTest {
         output.addTransputValue(new TransputValue("output1", min1, max1));
         output.addTransputValue(new TransputValue("output2", min2, max2));
 
-        Network network = new Network(input, output);
+        Network network = new Network(input, output, new int[]{});
 
         output = network.getOutput(input);
 

@@ -28,9 +28,6 @@ public class Neuron {
             inputConnectionWeights.stream()
                 .map(cw -> cw.getConnection().getNormalized() * cw.getWeight().getNormalized())
                 .collect(Collectors.toList()), bias));
-
-        // TODO add logging
-//        System.out.println(toString());
     }
 
     public ArrayList<ConnectionWeight> getInputConnectionWeights() {

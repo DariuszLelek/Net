@@ -8,8 +8,17 @@ public class NormalizedValue extends NumericValue implements Normalized {
     public static final double MIN_VALUE = 0.0;
     public static final double FLOAT_DELTA = 0.01;
 
+    private NormalizedValue(NormalizedValue normalizedValue){
+        super(normalizedValue.getMin(), normalizedValue.getMax());
+        this.value = normalizedValue.value;
+    }
+
     public NormalizedValue(double min, double max) {
         super(min, max);
+    }
+
+    public NormalizedValue copy(){
+        return new NormalizedValue(this);
     }
 
     public NormalizedValue() {

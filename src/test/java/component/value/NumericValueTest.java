@@ -12,9 +12,6 @@ public class NumericValueTest {
     private final double max = 13.0;
     private final NumericValue numericValue = new NumericValue(min, max);
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
     @Test(expected = ValueNotInRangeException.class)
     public void setValue_exception() throws ValueNotInRangeException {
         double notInRange = 20.0;

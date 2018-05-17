@@ -2,12 +2,20 @@ package component.value;
 
 import component.value.normalized.Normalized;
 import component.value.normalized.NormalizedValue;
+import exception.ValueNotInRangeException;
 
 public class TransputValue implements Normalized {
     private final String name;
     private final double min;
     private final double max;
     private double value = 0.0;
+
+    public TransputValue(TransputValue transputValue) {
+        name = transputValue.getName();
+        min = transputValue.getMin();
+        max = transputValue.getMax();
+        value = transputValue.getValue();
+    }
 
     public TransputValue(String name, double min, double max) {
         this.name = name;
@@ -19,8 +27,20 @@ public class TransputValue implements Normalized {
         return value;
     }
 
-    public void setValue(double value) {
-        this.value = value;
+    public double getMin() {
+        return min;
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public void setValue(double value) throws ValueNotInRangeException {
+        if(value >= min && value <= max){
+            this.value = value;
+        }else{
+            throw new ValueNotInRangeException("NumericValue [" + value + "] not in range [" + min + " - " + max + "]");
+        }
     }
 
     public String getName() {

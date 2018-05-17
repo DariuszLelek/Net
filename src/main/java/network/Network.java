@@ -14,12 +14,26 @@ import java.util.stream.IntStream;
 public class Network {
     private final Transput input;
     private final Transput output;
-    private final ArrayList<Layer> layers = new ArrayList<>();
-    private final Random random = new Random();
+    private final ArrayList<Layer> layers;
+    private final Random random;
+    private final int[] neuronsByLayer;
+
+    private Network(Network another){
+        input = another.input.copy();
+        output = another.output.copy();
+        neuronsByLayer = another.neuronsByLayer;
+        random = another.random;
+        layers = new ArrayList<>(another.layers.size());
+
+        IntStream.range(0, another.layers.size()).forEach(i -> layers.add(i, another.layers.get(i).copy()));
+    }
 
     public Network(Transput input, Transput output, int[] neuronsByLayer) throws InvalidNetworkParametersException {
         this.input = input;
         this.output = output;
+        this.neuronsByLayer = neuronsByLayer;
+        random = new Random();
+        layers = new ArrayList<>();
 
         if (!isValid(input.size(), output.size(), neuronsByLayer)) {
             String invalidParametersMessage = "Cannot construct network with given parameters: " +
@@ -41,6 +55,10 @@ public class Network {
 
     private void createInputConnections(Layer inputLayer) {
         inputLayer.getNeurons().forEach(neuron -> neuron.addInputConnection(new Connection()));
+    }
+
+    public Transput getInput() {
+        return input;
     }
 
     public Transput getOutput(final Transput input) throws InvalidNetworkInputException {
@@ -83,9 +101,21 @@ public class Network {
         return new ArrayList<>(layers);
     }
 
-    public void fire() {
+    private void fire() {
         fireLayersNeurons();
         updateOutput();
+    }
+
+    public Network copy(){
+        return new Network(this);
+    }
+
+    public void train(){
+        layers.forEach(layer ->
+                layer.getNeurons().forEach(neuron ->
+                        neuron.getBias().setFromNormalized(Bias.MAX_VALUE * random.nextDouble())));
+
+        // TODO: do some random stuff first...
     }
 
     private void fireLayersNeurons() {
@@ -97,7 +127,7 @@ public class Network {
             .forEach(i -> connectLayersNeurons(layers.get(i), layers.get(i + 1)));
     }
 
-    public void randomiseConnectionsWeight() {
+    private void randomiseConnectionsWeight() {
         layers.forEach(layer ->
             layer.getNeurons().forEach(neuron ->
                 neuron.getInputConnectionWeights()
@@ -121,5 +151,29 @@ public class Network {
     private boolean isValid(int inputs, int outputs, int... neuronsByLayer) {
         return inputs > 0 && outputs > 0 &&
             IntStream.range(0, neuronsByLayer.length).noneMatch(i -> neuronsByLayer[i] < 1);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Network)) return false;
+
+        Network network = (Network) o;
+
+        if (!getInput().equals(network.getInput())) return false;
+        if (!output.equals(network.output)) return false;
+        if (!layers.equals(network.layers)) return false;
+        if (!random.equals(network.random)) return false;
+        return Arrays.equals(neuronsByLayer, network.neuronsByLayer);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getInput().hashCode();
+        result = 31 * result + output.hashCode();
+        result = 31 * result + layers.hashCode();
+        result = 31 * result + random.hashCode();
+        result = 31 * result + Arrays.hashCode(neuronsByLayer);
+        return result;
     }
 }

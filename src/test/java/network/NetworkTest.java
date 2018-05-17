@@ -235,4 +235,12 @@ public class NetworkTest {
         Assert.assertTrue(output1 >= min1 && output1 <= max1);
         Assert.assertTrue(output2 >= min2 && output2 <= max2);
     }
+
+    @Test
+    public void copy() throws InvalidNetworkParametersException {
+        Network network = new Network(input, output, neuronsByLayer);
+        Network copy = network.copy();
+
+        Assert.assertEquals(network, copy);
+    }
 }

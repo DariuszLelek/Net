@@ -22,8 +22,30 @@ public class ConnectionWeight {
         return weight;
     }
 
+    public ConnectionWeight copy(){
+        return new ConnectionWeight(connection.copy(), weight.copy());
+    }
+
     @Override
     public String toString() {
         return "ConnectionWeight{" + connection + ", " + weight + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ConnectionWeight)) return false;
+
+        ConnectionWeight that = (ConnectionWeight) o;
+
+        if (!getConnection().equals(that.getConnection())) return false;
+        return getWeight().equals(that.getWeight());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getConnection().hashCode();
+        result = 31 * result + getWeight().hashCode();
+        return result;
     }
 }

@@ -7,20 +7,36 @@ import component.value.normalized.Weight;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Neuron {
     private final String id;
 
-    private final ArrayList<ConnectionWeight> inputConnectionWeights = new ArrayList<>();
-    private final Connection outputConnection = new Connection();
-    private final Bias bias = new Bias();
+    private final ArrayList<ConnectionWeight> inputConnectionWeights;
+    private final Connection outputConnection;
+    private final Bias bias;
+
+    private Neuron(Neuron neuron){
+        id = neuron.id;
+        bias = neuron.bias.copy();
+        outputConnection = neuron.outputConnection.copy();
+        inputConnectionWeights = new ArrayList<>(neuron.inputConnectionWeights.size());
+
+        IntStream.range(0, neuron.inputConnectionWeights.size()).forEach(i -> inputConnectionWeights.add(i, neuron.inputConnectionWeights.get(i).copy()));
+    }
 
     public Neuron() {
         id = "NO_ID";
+        bias = new Bias();
+        outputConnection = new Connection();
+        inputConnectionWeights = new ArrayList<>();
     }
 
     public Neuron(String id) {
         this.id = id;
+        bias = new Bias();
+        outputConnection = new Connection();
+        inputConnectionWeights = new ArrayList<>();
     }
 
     public void fire() {
@@ -61,6 +77,10 @@ public class Neuron {
         inputConnectionWeights.add(connectionWeight);
     }
 
+    public Neuron copy(){
+        return new Neuron(this);
+    }
+
     @Override
     public String toString() {
         return "Neuron{" +
@@ -69,5 +89,27 @@ public class Neuron {
             ", outputConnection=" + outputConnection +
             ", bias=" + bias +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Neuron)) return false;
+
+        Neuron neuron = (Neuron) o;
+
+        if (!id.equals(neuron.id)) return false;
+        if (!getInputConnectionWeights().equals(neuron.getInputConnectionWeights())) return false;
+        if (!getOutputConnection().equals(neuron.getOutputConnection())) return false;
+        return getBias().equals(neuron.getBias());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id.hashCode();
+        result = 31 * result + getInputConnectionWeights().hashCode();
+        result = 31 * result + getOutputConnection().hashCode();
+        result = 31 * result + getBias().hashCode();
+        return result;
     }
 }

@@ -19,6 +19,15 @@ public class Transput {
         transputValues.add(transputValue);
     }
 
+    public void updateTransputValues(ArrayList<TransputValue> transputValue){
+        this.transputValues.clear();
+        this.transputValues.addAll(transputValues);
+    }
+
+    public void clear(){
+        transputValues.clear();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -27,6 +36,13 @@ public class Transput {
         Transput transput = (Transput) o;
 
         return transputValues.equals(transput.transputValues);
+    }
+
+
+    protected Transput copy(){
+        Transput copy = new Transput();
+        this.transputValues.forEach(value -> copy.addTransputValue(new TransputValue(value)));
+        return copy;
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class OutputVerifier {
+    private static final double MAX_DISTANCE = 1;
 
     public static double getOutputValuesMachRate(List<ArrayList<TransputValue>> networkOutputValues, List<ArrayList<TransputValue>> expectedOutputValues){
         assert networkOutputValues.size() == expectedOutputValues.size();
@@ -23,9 +24,7 @@ public class OutputVerifier {
     }
 
     public static double getOutputValueMatchRate(TransputValue networkOutputValue, TransputValue expectedOutputValue){
-        assert networkOutputValue.getName().equals(expectedOutputValue.getName());
-        double rate = networkOutputValue.getNormalized() /  expectedOutputValue.getNormalized();
-        return rate > 1.0 ? (2.0 - rate) : rate;
+        return MAX_DISTANCE - Math.abs(networkOutputValue.getNormalized() - expectedOutputValue.getNormalized());
     }
 
 }

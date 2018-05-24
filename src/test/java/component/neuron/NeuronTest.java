@@ -18,10 +18,10 @@ public class NeuronTest {
         neuron.addInputConnection(firstInputConnection);
         neuron.addInputConnection(secondInputConnection);
 
-        Assert.assertNotEquals(ConnectionWeight.EMPTY, neuron.getConnectionWeight(firstInputConnection));
+        Assert.assertNotEquals(secondInputConnection, neuron.getConnectionWeight(firstInputConnection));
         Assert.assertEquals(firstInputConnection, neuron.getConnectionWeight(firstInputConnection).getConnection());
 
-        Assert.assertNotEquals(ConnectionWeight.EMPTY, neuron.getConnectionWeight(secondInputConnection));
+        Assert.assertNotEquals(firstInputConnection, neuron.getConnectionWeight(secondInputConnection));
         Assert.assertEquals(secondInputConnection, neuron.getConnectionWeight(secondInputConnection).getConnection());
     }
 

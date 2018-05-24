@@ -11,13 +11,16 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 public class Trainer {
+    private static Network bestNetwork;
 
     public static Network train(Network network, TrainData trainData, int iterations){
+        bestNetwork = network.copy();
+
         while (iterations -- > 0){
             network = processTrainCycle(network, trainData);
         }
 
-        return network;
+        return bestNetwork;
     }
 
     private static Network processTrainCycle(Network network, TrainData trainData){
@@ -26,8 +29,12 @@ public class Trainer {
         networkCopy.train();
         double ostTrainResult = getNetworkResult(networkCopy, trainData);
 
-        System.out.println("Pretrain result: " + preTrainResult + " post train result: " + ostTrainResult);
-        return ostTrainResult > preTrainResult ? networkCopy : network;
+        if(ostTrainResult > preTrainResult){
+            bestNetwork = networkCopy;
+            return networkCopy;
+        }else{
+            return network;
+        }
     }
 
     private static double getNetworkResult(Network network, TrainData trainData){

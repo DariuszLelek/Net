@@ -19,9 +19,10 @@ public class Transput {
         transputValues.add(transputValue);
     }
 
-    public void updateTransputValues(ArrayList<TransputValue> transputValue){
+    public void updateTransputValues(ArrayList<TransputValue> transputValues){
+        ArrayList<TransputValue> collectionCopy = new ArrayList<>(transputValues);
         this.transputValues.clear();
-        this.transputValues.addAll(transputValues);
+        this.transputValues.addAll(collectionCopy);
     }
 
     public void clear(){

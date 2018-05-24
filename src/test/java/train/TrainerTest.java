@@ -29,7 +29,7 @@ public class TrainerTest {
 
         output.addTransputValue(new TransputValue("output1", 0.0d, 100.0d));
 
-        Network untrainedNetwork = new Network(input, output, neuronsByLayer);
+        Network notTrainedNetwork = new Network(input, output, neuronsByLayer);
 
         TrainData trainData = new TrainData();
 
@@ -37,18 +37,23 @@ public class TrainerTest {
         input.getTransputValues().get(1).setValue(0.0);
 
         Transput expectedOutput = new Transput();
-
         expectedOutput.addTransputValue(new TransputValue("output1", 0.0d, 100.0d));
-
         expectedOutput.getTransputValues().get(0).setValue(50.0);
 
+        Transput notTranedNetworkOutput = notTrainedNetwork.getOutput(input);
+
+        System.out.println("Expected = " + 50.0 + " from not trained network: " + notTranedNetworkOutput.getTransputValues().get(0).getValue());
+
         trainData.addTrainData(input.getTransputValues(), expectedOutput.getTransputValues());
-
-        Network trainedNetwork = Trainer.train(untrainedNetwork, trainData, 50000);
-
+        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 500);
         Transput tranedNetworkOutput = trainedNetwork.getOutput(input);
 
-        System.out.println("Expected = " + 50.0 + " from network: " + tranedNetworkOutput.getTransputValues().get(0).getValue());
+        System.out.println("Expected = " + 50.0 + " from trained network: " + tranedNetworkOutput.getTransputValues().get(0).getValue());
+//
+//        input.getTransputValues().get(0).setValue(0.0);
+//        input.getTransputValues().get(1).setValue(10.0);
+//
+//        System.out.println("#2 Expected = " + 50.0 + " from trained network: " + trainedNetwork.getOutput(input).getTransputValues().get(0).getValue());
     }
 
 }

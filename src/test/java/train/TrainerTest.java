@@ -60,6 +60,8 @@ public class TrainerTest {
         Assert.assertTrue("After training network value [" + valueFromTrained + "] should be closer to the expected ["
                         + expectedValue + "] than value [" + valueFromUntrained + "] from untrained network.",
                 Math.abs(expectedValue - valueFromTrained) <= Math.abs(expectedValue - valueFromUntrained));
+
+        // TODO fix this test
         assertValueInBounds(valueFromTrained, expectedValue);
     }
 

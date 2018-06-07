@@ -7,6 +7,7 @@ import java.util.List;
 public class ActivationFunction {
 
     public static double calculateNormalized(List<Double> values, Bias bias){
-        return Math.min(values.stream().mapToDouble(Double::doubleValue).sum() / values.size() + bias.getNormalized(), 1);
+        double calc = values.stream().mapToDouble(Double::doubleValue).sum() / values.size();
+        return calc + bias.getNormalized() > 1 ? 1 : calc;
     }
 }

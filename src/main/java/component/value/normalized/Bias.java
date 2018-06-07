@@ -1,9 +1,9 @@
 package component.value.normalized;
 
 public class Bias extends NormalizedValue {
-    // TODO research bias max value
-    public static final double MAX_VALUE = 0.5;
+    public static final double MAX_VALUE = 1.0;
     public static final double MIN_VALUE = 0.0;
+    public static final double DEFAULT_VALUE = MIN_VALUE;
 
     private Bias(Bias bias){
         super(bias.getMin(), bias.getMax());
@@ -12,7 +12,7 @@ public class Bias extends NormalizedValue {
 
     public Bias() {
         super(MIN_VALUE, MAX_VALUE);
-        value = MAX_VALUE;
+        value = DEFAULT_VALUE;
     }
 
     @Override

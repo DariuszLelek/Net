@@ -116,6 +116,12 @@ public class Network {
         return new Network(this);
     }
 
+    public void resetNeuronsBias(){
+        layers.forEach(layer ->
+                layer.getNeurons().forEach(neuron ->
+                        neuron.getBias().setFromNormalized(Bias.DEFAULT_VALUE)));
+    }
+
     // TODO change this
     public void train(){
         randomiseConnectionsWeight(layers);

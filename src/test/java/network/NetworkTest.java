@@ -179,13 +179,14 @@ public class NetworkTest {
         TransputValue value1 = new TransputValue("input1", 0.0d, 10.0d);
         TransputValue value2 = new TransputValue("input2", 0.0d, 25.0d);
 
-        value1.setValue(6.0d);
+        value1.setValue(9.0d);
         value2.setValue(12.0d);
 
         input.addTransputValue(value1);
         input.addTransputValue(value2);
 
         Network network = new Network(input, this.output, neuronsByLayer);
+        network.resetNeuronsBias();
 
         Transput output = network.getOutput(input);
 
@@ -193,7 +194,7 @@ public class NetworkTest {
         double output2 = output.getTransputValues().get(1).getValue();
 
         input.getTransputValues().get(0).setValue(1.0);
-        input.getTransputValues().get(1).setValue(22.0);
+        input.getTransputValues().get(1).setValue(5.0);
 
         output = network.getOutput(input);
 

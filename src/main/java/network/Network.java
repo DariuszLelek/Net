@@ -49,6 +49,14 @@ public class Network {
 
         createInputConnections(getInputLayer());
         connectLayers(layers);
+
+        List<Layer> layersExcludingInputLayer = getLayersExcludingInputLyer(layers);
+        randomiseConnectionsWeight(layersExcludingInputLayer);
+        randomiseNeuronsBias(layersExcludingInputLayer);
+    }
+
+    private List<Layer> getLayersExcludingInputLyer(final ArrayList<Layer> layers){
+        return new ArrayList<>(layers.subList(Math.min(1, layers.size()), layers.size()));
     }
 
     private void createInputConnections(Layer inputLayer) {
@@ -108,20 +116,10 @@ public class Network {
         return new Network(this);
     }
 
-    public void randomise(){
-        randomiseConnectionsWeight();
-        randomiseNeuronsBias();
-    }
-
     // TODO change this
     public void train(){
-        randomise();
-
-        layers.forEach(layer ->
-                layer.getNeurons().forEach(neuron ->
-                        neuron.getBias().setFromNormalized(Bias.MAX_VALUE * random.nextDouble())));
-
-        // TODO: do some random stuff first...
+        randomiseConnectionsWeight(layers);
+        randomiseNeuronsBias(layers);
     }
 
     private void fireLayersNeurons() {
@@ -133,14 +131,14 @@ public class Network {
             .forEach(i -> connectLayersNeurons(layers.get(i), layers.get(i + 1)));
     }
 
-    private void randomiseConnectionsWeight() {
+    private void randomiseConnectionsWeight(final List<Layer> layers) {
         layers.forEach(layer ->
             layer.getNeurons().forEach(neuron ->
                 neuron.getInputConnectionWeights()
                     .forEach(cw -> cw.getWeight().setFromNormalized(Weight.MAX_VALUE * random.nextDouble()))));
     }
 
-    private void randomiseNeuronsBias() {
+    private void randomiseNeuronsBias(final List<Layer> layers) {
         layers.forEach(layer ->
             layer.getNeurons().forEach(neuron ->
                 neuron.getBias().setFromNormalized(Bias.MAX_VALUE * random.nextDouble())));

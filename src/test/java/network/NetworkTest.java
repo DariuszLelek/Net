@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class NetworkTest {
+    private static final double DELTA = 0.00001;
+
     private final Transput input = new Transput();
     private final Transput output = new Transput();
     private final int[] neuronsByLayer = new int[]{2};
@@ -150,8 +152,8 @@ public class NetworkTest {
 
         output = network.getOutput(input);
 
-        Assert.assertEquals(output.getTransputValues().get(0).getValue(), output1, 0.000001);
-        Assert.assertEquals(output.getTransputValues().get(1).getValue(), output2, 0.000001);
+        Assert.assertEquals(output.getTransputValues().get(0).getValue(), output1, DELTA);
+        Assert.assertEquals(output.getTransputValues().get(1).getValue(), output2, DELTA);
     }
 
     @Test(expected = InvalidNetworkInputException.class)
@@ -184,7 +186,6 @@ public class NetworkTest {
         input.addTransputValue(value2);
 
         Network network = new Network(input, this.output, neuronsByLayer);
-        network.randomise();
 
         Transput output = network.getOutput(input);
 
@@ -199,8 +200,8 @@ public class NetworkTest {
         double output11 = output.getTransputValues().get(0).getValue();
         double output22 = output.getTransputValues().get(1).getValue();
 
-        Assert.assertNotEquals(output11, output1, NormalizedValue.FLOAT_DELTA);
-        Assert.assertNotEquals(output22, output2, NormalizedValue.FLOAT_DELTA);
+        Assert.assertNotEquals(output11, output1, DELTA);
+        Assert.assertNotEquals(output22, output2, DELTA);
     }
 
     @Test

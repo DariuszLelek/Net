@@ -12,6 +12,7 @@ public class Bias extends NormalizedValue {
 
     public Bias() {
         super(MIN_VALUE, MAX_VALUE);
+        value = MAX_VALUE;
     }
 
     @Override

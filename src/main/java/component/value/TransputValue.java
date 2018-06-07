@@ -23,6 +23,13 @@ public class TransputValue implements Normalized {
         this.max = max;
     }
 
+    public TransputValue(String name, double min, double max, double value) {
+        this.name = name;
+        this.min = min;
+        this.max = max;
+        this.value = value;
+    }
+
     public double getValue() {
         return value;
     }
@@ -59,26 +66,26 @@ public class TransputValue implements Normalized {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof TransputValue)) return false;
 
         TransputValue that = (TransputValue) o;
 
-        if (Double.compare(that.min, min) != 0) return false;
-        if (Double.compare(that.max, max) != 0) return false;
-        if (Double.compare(that.value, value) != 0) return false;
-        return name.equals(that.name);
+        if (Double.compare(that.getMin(), getMin()) != 0) return false;
+        if (Double.compare(that.getMax(), getMax()) != 0) return false;
+        if (Double.compare(that.getValue(), getValue()) != 0) return false;
+        return getName() != null ? getName().equals(that.getName()) : that.getName() == null;
     }
 
     @Override
     public int hashCode() {
         int result;
         long temp;
-        result = name.hashCode();
-        temp = Double.doubleToLongBits(min);
+        result = getName() != null ? getName().hashCode() : 0;
+        temp = Double.doubleToLongBits(getMin());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(max);
+        temp = Double.doubleToLongBits(getMax());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(value);
+        temp = Double.doubleToLongBits(getValue());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }

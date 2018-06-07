@@ -40,7 +40,7 @@ public class Transput {
     }
 
 
-    protected Transput copy(){
+    public Transput copy(){
         Transput copy = new Transput();
         this.transputValues.forEach(value -> copy.addTransputValue(new TransputValue(value)));
         return copy;

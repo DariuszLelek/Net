@@ -24,12 +24,9 @@ public class TrainDataTest {
         input.addTransputValue(new TransputValue("input", 0.0, 10.5));
 
         TrainData trainData = new TrainData();
-
-        trainData.addTrainData(input.getTransputValues(), output.getTransputValues());
-
+        trainData.addTrainData(input, output);
         input.getTransputValues().get(0).setValue(5.0);
-
-        trainData.addTrainData(input.getTransputValues(), output.getTransputValues());
+        trainData.addTrainData(input, output);
 
         Assert.assertTrue("Invalid train data size: " + trainData.size() + ", should be: " + expectedSize, trainData.size() == expectedSize);
     }
@@ -44,9 +41,8 @@ public class TrainDataTest {
         input.addTransputValue(new TransputValue("input", 0.0, 10.5));
 
         TrainData trainData = new TrainData();
-
-        trainData.addTrainData(input.getTransputValues(), output.getTransputValues());
-        trainData.addTrainData(input.getTransputValues(), output.getTransputValues());
+        trainData.addTrainData(input, output);
+        trainData.addTrainData(input, output);
 
         Assert.assertTrue("Invalid train data size: " + trainData.size() + ", should be: " + expectedSize, trainData.size() == expectedSize);
     }

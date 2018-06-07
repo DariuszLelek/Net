@@ -1,5 +1,6 @@
 package network;
 
+import component.value.TransputValueHelper;
 import component.value.normalized.Connection;
 import component.neuron.Neuron;
 import component.value.normalized.Bias;
@@ -48,9 +49,6 @@ public class Network {
 
         createInputConnections(getInputLayer());
         connectLayers(layers);
-
-        randomiseConnectionsWeight();
-        randomiseNeuronsBias();
     }
 
     private void createInputConnections(Layer inputLayer) {
@@ -62,7 +60,7 @@ public class Network {
     }
 
     public Transput getOutput(final Transput input) throws InvalidNetworkInputException {
-        if (this.input.equals(input)) {
+        if (TransputValueHelper.sameTransputValuesDefinitions(input, this.input)) {
             IntStream.range(0, input.size())
                 .forEach(i -> getInputLayer().getNeurons().get(i)
                     .getInputConnections().get(0)
@@ -110,7 +108,15 @@ public class Network {
         return new Network(this);
     }
 
+    public void randomise(){
+        randomiseConnectionsWeight();
+        randomiseNeuronsBias();
+    }
+
+    // TODO change this
     public void train(){
+        randomise();
+
         layers.forEach(layer ->
                 layer.getNeurons().forEach(neuron ->
                         neuron.getBias().setFromNormalized(Bias.MAX_VALUE * random.nextDouble())));

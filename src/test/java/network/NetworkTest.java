@@ -119,6 +119,7 @@ public class NetworkTest {
         Collection<Weight> randomizedWeights = new ArrayList<>();
 
         network = new Network(input, output, neuronsByLayer);
+        network.train();
 
         for(Layer layer : network.getLayersCopy()){
             randomizedWeights.addAll(layer.getNeuronInputsWeights());
@@ -149,8 +150,8 @@ public class NetworkTest {
 
         output = network.getOutput(input);
 
-        Assert.assertEquals(output.getTransputValues().get(0).getValue(), output1, NormalizedValue.FLOAT_DELTA);
-        Assert.assertEquals(output.getTransputValues().get(1).getValue(), output2, NormalizedValue.FLOAT_DELTA);
+        Assert.assertEquals(output.getTransputValues().get(0).getValue(), output1, 0.000001);
+        Assert.assertEquals(output.getTransputValues().get(1).getValue(), output2, 0.000001);
     }
 
     @Test(expected = InvalidNetworkInputException.class)
@@ -183,6 +184,7 @@ public class NetworkTest {
         input.addTransputValue(value2);
 
         Network network = new Network(input, this.output, neuronsByLayer);
+        network.randomise();
 
         Transput output = network.getOutput(input);
 

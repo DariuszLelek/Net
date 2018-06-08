@@ -19,30 +19,30 @@ public class Trainer {
     }
 
     private static Network processTrainCycle(Network network, TrainData trainData){
-        System.out.println("NEW TRAIN CYCLE");
-
         double result = getNetworkResult(network, trainData);
 
         NetworkMutationInfo mutationInfo = NetworkMutator.mutate(network);
 
         double postResult = getNetworkResult(network, trainData);
 
+        if(postResult != result){
+            System.out.println();
+        }
+
         if(postResult < result){
             try {
                 NetworkMutator.removeMutation(mutationInfo);
 
-                double postResult2 = getNetworkResult(network, trainData);
+
             } catch (TraceableNotFoundException e) {
-                e.printStackTrace();
+                // TODO add logger
             }
         }
 
-//        System.out.println("result :" + result + " postResult: " + postResult);
+        double postResult2 = getNetworkResult(network, trainData);
 
         return network;
     }
-
-
 
     private static double getNetworkResult(Network network, TrainData trainData){
         double value = 0.0;

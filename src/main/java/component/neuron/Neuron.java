@@ -25,10 +25,10 @@ public class Neuron{
         inputConnectionWeights = new ArrayList<>();
     }
 
-    public Neuron(String id) {
+    public Neuron(String id, final Bias bias) {
         this.id = id;
+        this.bias = bias;
         threshold = new Threshold();
-        bias = new Bias();
         outputConnection = new Connection();
         inputConnectionWeights = new ArrayList<>();
     }
@@ -81,7 +81,6 @@ public class Neuron{
             "id=" + id +
             ", inputConnectionWeights=" + inputConnectionWeights +
             ", outputConnection=" + outputConnection +
-            ", bias=" + bias +
             '}';
     }
 

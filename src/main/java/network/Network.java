@@ -43,7 +43,8 @@ public class Network {
         connectLayers(layers);
 
         randomiseConnectionsWeight(layers);
-        randomiseNeuronsBias(layers);
+//        randomiseNeuronsBias(layers);
+        randomiseLayersBias(layers);
         randomiseNeuronsThreshold(layers);
     }
 
@@ -71,6 +72,10 @@ public class Network {
                 .forEach(i -> getInputLayer().getNeurons().get(i)
                         .getInputConnections().get(0)
                         .setFromNormalized(input.getTransputValues().get(i).getNormalized()));
+    }
+
+    public ArrayList<Layer> getLayers() {
+        return layers;
     }
 
     private Layer getInputLayer(){
@@ -124,6 +129,10 @@ public class Network {
             layer.getNeurons().forEach(neuron ->
                 neuron.getInputConnectionWeights()
                     .forEach(cw -> cw.getWeight().setFromNormalized(Weight.MAX_VALUE * random.nextDouble()))));
+    }
+
+    private void randomiseLayersBias(final List<Layer> layers){
+        layers.forEach(layer -> layer.getBias().setFromNormalized(Bias.MAX_VALUE * random.nextDouble()));
     }
 
     private void randomiseNeuronsBias(final List<Layer> layers) {

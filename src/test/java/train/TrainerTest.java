@@ -39,8 +39,8 @@ public class TrainerTest {
         Network notTrainedNetwork = new Network(input, output, neuronsByLayer);
         TrainData trainData = new TrainData();
 
-        input.getTransputValues().get(0).setValue(5.0);
-        input.getTransputValues().get(1).setValue(0.0);
+        input.getTransputValues().get(0).setValue(99.0);
+        input.getTransputValues().get(1).setValue(77.0);
 
         Transput expectedOutput = new Transput();
         expectedOutput.addTransputValue(new TransputValue("output1", MIN, MAX, expectedValue));
@@ -50,7 +50,7 @@ public class TrainerTest {
         System.out.println(notTrainedNetwork);
 
         trainData.addTrainData(input, expectedOutput);
-        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 50);
+        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, TRAIN_ITERATIONS);
         Transput trainedNetworkOutput = trainedNetwork.getOutput(input);
 
         System.out.println(trainedNetwork);
@@ -63,7 +63,6 @@ public class TrainerTest {
                         + expectedValue + "] than value [" + valueFromUntrained + "] from untrained network.",
                 Math.abs(expectedValue - valueFromTrained) <= Math.abs(expectedValue - valueFromUntrained));
 
-        // TODO fix this test
         assertValueInBounds(valueFromTrained, expectedValue);
     }
 
@@ -75,7 +74,7 @@ public class TrainerTest {
         Transput output = new Transput();
         output.addTransputValue(new TransputValue("output1", MIN, MAX));
 
-        Network notTrainedNetwork = new Network(input, output, neuronsByLayer);
+        Network notTrainedNetwork = new Network(input, output, new int[]{10, 10});
         TrainData trainData = new TrainData();
 
         assert inputValues.length == expectedValues.length;
@@ -93,7 +92,7 @@ public class TrainerTest {
             trainData.addTrainData(input, expectedOutput);
         }
 
-        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 100);
+        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 1000);
 
         double valueFromTrained;
         double valueExpected;

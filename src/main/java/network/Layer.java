@@ -2,6 +2,7 @@ package network;
 
 import component.ConnectionWeight;
 import component.neuron.Neuron;
+import component.value.normalized.Bias;
 import component.value.normalized.Weight;
 
 import java.util.ArrayList;
@@ -12,15 +13,17 @@ import java.util.stream.IntStream;
 public class Layer {
     private final String id;
     private final ArrayList<Neuron> neurons;
+    private final Bias bias;
 
     public Layer(String id, int neuronsNumber) {
         this.id = id;
-        neurons = createNeurons(neuronsNumber);
+        bias = new Bias();
+        neurons = createNeurons(neuronsNumber, bias);
     }
 
-    private ArrayList<Neuron> createNeurons(int neuronsNumber){
+    private ArrayList<Neuron> createNeurons(int neuronsNumber, final Bias bias){
         return IntStream.range(0, neuronsNumber)
-            .mapToObj(i -> new Neuron(id + "-" + String.valueOf(i)))
+            .mapToObj(i -> new Neuron(id + "-" + String.valueOf(i), bias))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -39,6 +42,10 @@ public class Layer {
             .collect(Collectors.toList());
     }
 
+    public Bias getBias() {
+        return bias;
+    }
+
     public String getId() {
         return id;
     }
@@ -48,6 +55,7 @@ public class Layer {
         return "Layer{" +
                 "id='" + id + '\'' +
                 ", neurons=" + neurons +
+                ", bias =" + bias +
                 '}';
     }
 

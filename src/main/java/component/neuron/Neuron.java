@@ -3,30 +3,23 @@ package component.neuron;
 import component.value.normalized.Connection;
 import component.ConnectionWeight;
 import component.value.normalized.Bias;
+import component.value.normalized.Threshold;
 import component.value.normalized.Weight;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
-public class Neuron {
+public class Neuron{
     private final String id;
 
     private final ArrayList<ConnectionWeight> inputConnectionWeights;
     private final Connection outputConnection;
+    private final Threshold threshold;
     private final Bias bias;
-
-    private Neuron(Neuron neuron){
-        id = neuron.id;
-        bias = neuron.bias.copy();
-        outputConnection = neuron.outputConnection.copy();
-        inputConnectionWeights = new ArrayList<>(neuron.inputConnectionWeights.size());
-
-        IntStream.range(0, neuron.inputConnectionWeights.size()).forEach(i -> inputConnectionWeights.add(i, neuron.inputConnectionWeights.get(i).copy()));
-    }
 
     public Neuron() {
         id = "NO_ID";
+        threshold = new Threshold();
         bias = new Bias();
         outputConnection = new Connection();
         inputConnectionWeights = new ArrayList<>();
@@ -34,6 +27,7 @@ public class Neuron {
 
     public Neuron(String id) {
         this.id = id;
+        threshold = new Threshold();
         bias = new Bias();
         outputConnection = new Connection();
         inputConnectionWeights = new ArrayList<>();
@@ -41,9 +35,9 @@ public class Neuron {
 
     public void fire() {
         outputConnection.setFromNormalized(ActivationFunction.calculateNormalized(
-            inputConnectionWeights.stream()
+                inputConnectionWeights.stream()
                 .map(cw -> cw.getConnection().getNormalized() * cw.getWeight().getNormalized())
-                .collect(Collectors.toList()), bias));
+                .collect(Collectors.toList()), bias, threshold));
     }
 
     public ArrayList<ConnectionWeight> getInputConnectionWeights() {
@@ -61,6 +55,10 @@ public class Neuron {
             .orElse(ConnectionWeight.EMPTY);
     }
 
+    public Threshold getThreshold() {
+        return threshold;
+    }
+
     public Bias getBias() {
         return bias;
     }
@@ -75,10 +73,6 @@ public class Neuron {
 
     public void addInputConnectionWeight(ConnectionWeight connectionWeight){
         inputConnectionWeights.add(connectionWeight);
-    }
-
-    public Neuron copy(){
-        return new Neuron(this);
     }
 
     @Override

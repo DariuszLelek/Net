@@ -1,6 +1,6 @@
 package component.value;
 
-import network.Transput;
+import component.Transput;
 
 import java.util.List;
 import java.util.stream.IntStream;

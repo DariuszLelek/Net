@@ -1,4 +1,4 @@
-package network;
+package component;
 
 import component.value.TransputValue;
 
@@ -37,13 +37,6 @@ public class Transput {
         Transput transput = (Transput) o;
 
         return transputValues.equals(transput.transputValues);
-    }
-
-
-    public Transput copy(){
-        Transput copy = new Transput();
-        this.transputValues.forEach(value -> copy.addTransputValue(new TransputValue(value)));
-        return copy;
     }
 
     @Override

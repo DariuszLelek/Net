@@ -1,24 +1,20 @@
 package component.value.normalized;
 
+import component.TraceableChange;
 import component.value.NumericValue;
 import exception.ValueNotInRangeException;
 
-public class NormalizedValue extends NumericValue implements Normalized {
+import java.util.UUID;
+
+public class NormalizedValue extends NumericValue implements Normalized, TraceableChange {
+    protected final String id = UUID.randomUUID().toString();
+
     public static final double MAX_VALUE = 1.0;
     public static final double MIN_VALUE = 0.0;
     public static final double FLOAT_DELTA = 0.01;
 
-    private NormalizedValue(NormalizedValue normalizedValue){
-        super(normalizedValue.getMin(), normalizedValue.getMax());
-        this.value = normalizedValue.value;
-    }
-
     public NormalizedValue(double min, double max) {
         super(min, max);
-    }
-
-    public NormalizedValue copy(){
-        return new NormalizedValue(this);
     }
 
     public NormalizedValue() {
@@ -36,6 +32,16 @@ public class NormalizedValue extends NumericValue implements Normalized {
         } catch (ValueNotInRangeException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public void setOriginal(double originalNormalizedValue) {
+        setFromNormalized(originalNormalizedValue);
     }
 
     @Override

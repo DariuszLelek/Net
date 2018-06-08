@@ -3,7 +3,7 @@ package train;
 import component.value.TransputValue;
 import component.value.normalized.NormalizedValue;
 import exception.ValueNotInRangeException;
-import network.Transput;
+import component.Transput;
 import org.junit.Assert;
 import org.junit.Test;
 

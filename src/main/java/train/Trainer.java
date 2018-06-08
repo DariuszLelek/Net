@@ -2,38 +2,47 @@ package train;
 
 import component.value.TransputValue;
 import exception.InvalidNetworkInputException;
+import exception.TraceableNotFoundException;
 import network.Network;
-import network.Transput;
+import component.Transput;
+import network.mutation.NetworkMutationInfo;
+import network.mutation.NetworkMutator;
 
 import java.util.ArrayList;
-import java.util.Map;
+import java.util.stream.IntStream;
 
 public class Trainer {
-    private static Network bestNetwork;
 
-    public static Network train(Network network, TrainData trainData, int iterations){
-        bestNetwork = network.copy();
-
-        while (iterations-- > 0){
-            network = processTrainCycle(network, trainData);
-        }
-
-        return bestNetwork;
+    public static Network train(final Network network, TrainData trainData, int iterations){
+        IntStream.range(0, iterations).forEach(i -> processTrainCycle(network, trainData));
+        return network;
     }
 
     private static Network processTrainCycle(Network network, TrainData trainData){
-        double preTrainResult = getNetworkResult(network, trainData);
-        Network networkCopy = network.copy();
-        networkCopy.train();
-        double ostTrainResult = getNetworkResult(networkCopy, trainData);
+        System.out.println("NEW TRAIN CYCLE");
 
-        if(ostTrainResult > preTrainResult){
-            bestNetwork = networkCopy;
-            return networkCopy;
-        }else{
-            return network;
+        double result = getNetworkResult(network, trainData);
+
+        NetworkMutationInfo mutationInfo = NetworkMutator.mutate(network);
+
+        double postResult = getNetworkResult(network, trainData);
+
+        if(postResult < result){
+            try {
+                NetworkMutator.removeMutation(mutationInfo);
+
+                double postResult2 = getNetworkResult(network, trainData);
+            } catch (TraceableNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+
+//        System.out.println("result :" + result + " postResult: " + postResult);
+
+        return network;
     }
+
+
 
     private static double getNetworkResult(Network network, TrainData trainData){
         double value = 0.0;

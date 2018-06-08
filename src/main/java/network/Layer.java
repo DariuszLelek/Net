@@ -13,12 +13,6 @@ public class Layer {
     private final String id;
     private final ArrayList<Neuron> neurons;
 
-    public Layer(Layer layer){
-        id = layer.id;
-        neurons = new ArrayList<>(layer.neurons.size());
-        IntStream.range(0, layer.neurons.size()).forEach(i -> neurons.add(i, layer.neurons.get(i).copy()));
-    }
-
     public Layer(String id, int neuronsNumber) {
         this.id = id;
         neurons = createNeurons(neuronsNumber);
@@ -28,10 +22,6 @@ public class Layer {
         return IntStream.range(0, neuronsNumber)
             .mapToObj(i -> new Neuron(id + "-" + String.valueOf(i)))
             .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    public Layer copy(){
-        return new Layer(this);
     }
 
     public ArrayList<Neuron> getNeurons() {
@@ -47,6 +37,18 @@ public class Layer {
             .flatMap(List::stream)
             .map(ConnectionWeight::getWeight)
             .collect(Collectors.toList());
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Layer{" +
+                "id='" + id + '\'' +
+                ", neurons=" + neurons +
+                '}';
     }
 
     @Override

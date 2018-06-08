@@ -1,6 +1,6 @@
 package train;
 
-import network.Transput;
+import component.Transput;
 
 public class InputOutputPair {
     private final Transput input;

@@ -6,13 +6,11 @@ import exception.InvalidNetworkParametersException;
 import exception.InvalidTransputDataException;
 import exception.ValueNotInRangeException;
 import network.Network;
-import network.Transput;
+import component.Transput;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -49,9 +47,13 @@ public class TrainerTest {
 
         double valueFromUntrained = notTrainedNetwork.getOutput(input).getTransputValues().get(0).getValue();
 
+        System.out.println(notTrainedNetwork);
+
         trainData.addTrainData(input, expectedOutput);
-        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, TRAIN_ITERATIONS);
+        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 50);
         Transput trainedNetworkOutput = trainedNetwork.getOutput(input);
+
+        System.out.println(trainedNetwork);
 
         double valueFromTrained = trainedNetworkOutput.getTransputValues().get(0).getValue();
 
@@ -67,7 +69,7 @@ public class TrainerTest {
 
     @Test
     public void train_multipleTrainData_singleOutputValue() throws InvalidNetworkParametersException, InvalidTransputDataException, ValueNotInRangeException, InvalidNetworkInputException {
-        double inputValues[][] = {{2.0, 10.0}, {0.0, 10.0}, {18.0, 5.0}, {10.0, 10.0}};
+        double inputValues[][] = {{50.0, 100.0}, {0.0, 10.0}, {18.0, 5.0}, {10.0, 10.0}};
         double expectedValues[] = {20.0, 0.0, 95.0, 100.0};
 
         Transput output = new Transput();
@@ -91,7 +93,7 @@ public class TrainerTest {
             trainData.addTrainData(input, expectedOutput);
         }
 
-        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, TRAIN_ITERATIONS);
+        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 100);
 
         double valueFromTrained;
         double valueExpected;

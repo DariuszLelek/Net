@@ -43,7 +43,6 @@ public class Network {
         connectLayers(layers);
 
         randomiseConnectionsWeight(layers);
-//        randomiseNeuronsBias(layers);
         randomiseLayersBias(layers);
         randomiseNeuronsThreshold(layers);
     }
@@ -109,12 +108,6 @@ public class Network {
         updateOutput();
     }
 
-    public void resetNeuronsBias(){
-        layers.forEach(layer ->
-                layer.getNeurons().forEach(neuron ->
-                        neuron.getBias().setFromNormalized(Bias.DEFAULT_VALUE)));
-    }
-
     private void fireLayersNeurons() {
         layers.forEach(Layer::fireNeurons);
     }
@@ -133,12 +126,6 @@ public class Network {
 
     private void randomiseLayersBias(final List<Layer> layers){
         layers.forEach(layer -> layer.getBias().setFromNormalized(Bias.MAX_VALUE * random.nextDouble()));
-    }
-
-    private void randomiseNeuronsBias(final List<Layer> layers) {
-        layers.forEach(layer ->
-            layer.getNeurons().forEach(neuron ->
-                neuron.getBias().setFromNormalized(Bias.MAX_VALUE * random.nextDouble())));
     }
 
     private void randomiseNeuronsThreshold(final List<Layer> layers){
@@ -174,10 +161,9 @@ public class Network {
 
         Network network = (Network) o;
 
-        if (!getInput().equals(network.getInput())) return false;
-        if (!output.equals(network.output)) return false;
-        if (!layers.equals(network.layers)) return false;
-        return random.equals(network.random) && Arrays.equals(neuronsByLayer, network.neuronsByLayer);
+        return getInput().equals(network.getInput()) && output.equals(network.output)
+                && layers.equals(network.layers) && random.equals(network.random)
+                && Arrays.equals(neuronsByLayer, network.neuronsByLayer);
     }
 
     @Override

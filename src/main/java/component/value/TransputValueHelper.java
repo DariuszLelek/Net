@@ -11,11 +11,14 @@ public class TransputValueHelper {
     }
 
     public static boolean sameValuesDefinition(List<TransputValue> first, List<TransputValue> second){
-        return first.size() == second.size() && IntStream.range(0, first.size()).mapToObj(i -> sameValueDefinition(first.get(i), second.get(i))).anyMatch(Boolean::booleanValue);
+        return first.size() == second.size()
+                && IntStream.range(0, first.size())
+                        .mapToObj(i -> sameValueDefinition(first.get(i), second.get(i))).anyMatch(Boolean::booleanValue);
     }
 
     public static boolean sameValueDefinition(TransputValue first, TransputValue second){
-        return stringMatch(first.getName(), second.getName()) && first.getMin() == second.getMin() && first.getMax() == second.getMax();
+        return stringMatch(first.getName(), second.getName())
+                && first.getMin() == second.getMin() && first.getMax() == second.getMax();
     }
 
     private static boolean stringMatch(String first, String second){

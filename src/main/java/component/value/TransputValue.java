@@ -70,10 +70,9 @@ public class TransputValue implements Normalized {
 
         TransputValue that = (TransputValue) o;
 
-        if (Double.compare(that.getMin(), getMin()) != 0) return false;
-        if (Double.compare(that.getMax(), getMax()) != 0) return false;
-        if (Double.compare(that.getValue(), getValue()) != 0) return false;
-        return getName() != null ? getName().equals(that.getName()) : that.getName() == null;
+        return Double.compare(that.getMin(), getMin()) == 0 && Double.compare(that.getMax(), getMax()) == 0
+                && Double.compare(that.getValue(), getValue()) == 0
+                && (getName() != null ? getName().equals(that.getName()) : that.getName() == null);
     }
 
     @Override

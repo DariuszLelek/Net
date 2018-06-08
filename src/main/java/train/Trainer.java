@@ -17,7 +17,6 @@ public class Trainer {
         IntStream.range(0, iterations).forEach(i -> processTrainCycle(network, trainData));
         return network;
     }
-
     private static Network processTrainCycle(Network network, TrainData trainData){
         double result = getNetworkResult(network, trainData);
 
@@ -25,15 +24,9 @@ public class Trainer {
 
         double postResult = getNetworkResult(network, trainData);
 
-        if(postResult != result){
-            System.out.println();
-        }
-
         if(postResult < result){
             try {
                 NetworkMutator.removeMutation(mutationInfo);
-
-
             } catch (TraceableNotFoundException e) {
                 // TODO add logger
             }

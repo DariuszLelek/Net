@@ -7,7 +7,7 @@ import exception.ValueNotInRangeException;
 import java.util.UUID;
 
 public class NormalizedValue extends NumericValue implements Normalized, TraceableChange {
-    protected final String id = UUID.randomUUID().toString();
+    private final String id = UUID.randomUUID().toString();
 
     public static final double MAX_VALUE = 1.0;
     public static final double MIN_VALUE = 0.0;

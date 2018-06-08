@@ -21,7 +21,6 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-// TODO change name to something else?
 public class NetworkMutator {
     private static final Map<MutationType, TraceableChangeSupplier> traceableProviders = new HashMap<>();
     private static final Map<MutationType, NetworkMutationSupplier> mutationProviders = new HashMap<>();
@@ -88,10 +87,6 @@ public class NetworkMutator {
     private static Collection<? extends TraceableChange> getLayersBias(final Network network){
         return network.getLayers().stream().map(Layer::getBias).collect(Collectors.toList());
     }
-
-//    private static Collection<? extends TraceableChange> getNeuronsBias(final Network network){
-//        return network.getNeurons().stream().map(Neuron::getBias).collect(Collectors.toList());
-//    }
 
     private static Collection<? extends TraceableChange> getNeuronsConnectionWeight(final Network network){
         return getNetworkConnectionWeights(network).stream().map(ConnectionWeight::getWeight).collect(Collectors.toList());

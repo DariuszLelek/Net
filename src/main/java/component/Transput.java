@@ -25,10 +25,6 @@ public class Transput {
         this.transputValues.addAll(collectionCopy);
     }
 
-    public void clear(){
-        transputValues.clear();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

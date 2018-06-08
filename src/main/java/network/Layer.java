@@ -66,8 +66,7 @@ public class Layer {
 
         Layer layer = (Layer) o;
 
-        if (!id.equals(layer.id)) return false;
-        return getNeurons().equals(layer.getNeurons());
+        return id.equals(layer.id) && getNeurons().equals(layer.getNeurons());
     }
 
     @Override

@@ -41,9 +41,7 @@ public class NumericValue {
 
         NumericValue that = (NumericValue) o;
 
-        if (Double.compare(that.min, min) != 0) return false;
-        if (Double.compare(that.max, max) != 0) return false;
-        return Double.compare(that.value, value) == 0;
+        return Double.compare(that.min, min) == 0 && Double.compare(that.max, max) == 0 && Double.compare(that.value, value) == 0;
     }
 
     @Override

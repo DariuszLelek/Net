@@ -1,7 +1,6 @@
 package component.neuron;
 
 import component.value.normalized.Connection;
-import component.ConnectionWeight;
 import exception.ValueNotInRangeException;
 import org.junit.Assert;
 import org.junit.Test;

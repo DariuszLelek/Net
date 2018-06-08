@@ -91,10 +91,8 @@ public class Neuron{
 
         Neuron neuron = (Neuron) o;
 
-        if (!id.equals(neuron.id)) return false;
-        if (!getInputConnectionWeights().equals(neuron.getInputConnectionWeights())) return false;
-        if (!getOutputConnection().equals(neuron.getOutputConnection())) return false;
-        return getBias().equals(neuron.getBias());
+        return id.equals(neuron.id) && getInputConnectionWeights().equals(neuron.getInputConnectionWeights())
+                && getOutputConnection().equals(neuron.getOutputConnection()) && getBias().equals(neuron.getBias());
     }
 
     @Override

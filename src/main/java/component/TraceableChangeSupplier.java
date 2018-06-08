@@ -1,6 +1,5 @@
 package component;
 
-import component.TraceableChange;
 import network.Network;
 
 import java.util.Collection;

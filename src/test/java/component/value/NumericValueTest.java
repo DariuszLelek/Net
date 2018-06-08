@@ -3,9 +3,7 @@ package component.value;
 import component.value.normalized.NormalizedValue;
 import exception.ValueNotInRangeException;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 public class NumericValueTest {
     private final double min = 0.0;

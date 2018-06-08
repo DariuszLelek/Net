@@ -1,7 +1,6 @@
 package component;
 
 import component.value.normalized.Connection;
-import component.value.NumericValueTest;
 import component.value.normalized.NormalizedValue;
 import org.junit.Assert;
 import org.junit.Test;

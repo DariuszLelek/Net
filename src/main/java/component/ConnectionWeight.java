@@ -34,8 +34,7 @@ public class ConnectionWeight {
 
         ConnectionWeight that = (ConnectionWeight) o;
 
-        if (!getConnection().equals(that.getConnection())) return false;
-        return getWeight().equals(that.getWeight());
+        return getConnection().equals(that.getConnection()) && getWeight().equals(that.getWeight());
     }
 
     @Override

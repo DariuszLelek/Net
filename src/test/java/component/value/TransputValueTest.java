@@ -4,8 +4,6 @@ import component.value.normalized.NormalizedValue;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class TransputValueTest {
     @Test
     public void getNormalized() throws Exception {

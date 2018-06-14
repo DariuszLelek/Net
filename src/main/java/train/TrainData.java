@@ -4,24 +4,18 @@ package train;
 import exception.InvalidTransputDataException;
 import component.Transput;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TrainData {
-    private final List<InputOutputPair> inputOutputPairs = new ArrayList<>();
+    private final Set<InputOutputPair> inputOutputPairs = new HashSet<>();
 
     public void addTrainData(Transput input, Transput output) throws InvalidTransputDataException {
-        InputOutputPair pair = new InputOutputPair(input, output);
-
-        if(!inputOutputPairs.contains(pair)){
-            inputOutputPairs.add(pair);
-        }else{
-            // TODO add logger
-            System.out.println("Attempting to add data for same input twice!");
-        }
+        inputOutputPairs.add(new InputOutputPair(input, output));
     }
 
-    public List<InputOutputPair> getInputOutputPairs() {
+    public Collection<InputOutputPair> getInputOutputPairs() {
         return inputOutputPairs;
     }
 

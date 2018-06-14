@@ -130,7 +130,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void getOutputs_sameInputs() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
+    public void getOutput_sameInputs() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
         Transput input = new Transput();
 
         TransputValue value1 = new TransputValue("input1", 0.0d, 10.0d);
@@ -156,7 +156,7 @@ public class NetworkTest {
     }
 
     @Test(expected = InvalidNetworkInputException.class)
-    public void getOutputs_differentInputs() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
+    public void getOutput_differentInputs() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
         Transput input1 = new Transput();
         Transput input2 = new Transput();
 
@@ -170,40 +170,6 @@ public class NetworkTest {
 
         network.getOutput(input2);
     }
-
-    // This test will fail because of untrained network have too high thresholds for anything to progress to last layer
-//    @Test
-//    public void getOutputs_differentInputValues() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
-//        Transput input = new Transput();
-//
-//        TransputValue value1 = new TransputValue("input1", 0.0d, 10.0d);
-//        TransputValue value2 = new TransputValue("input2", 0.0d, 25.0d);
-//
-//        value1.setValue(9.0d);
-//        value2.setValue(12.0d);
-//
-//        input.addTransputValue(value1);
-//        input.addTransputValue(value2);
-//
-//        Network network = new Network(input, this.output, neuronsByLayer);
-//        network.resetNeuronsBias();
-//
-//        Transput output = network.getOutput(input);
-//
-//        double output1 = output.getTransputValues().get(0).getValue();
-//        double output2 = output.getTransputValues().get(1).getValue();
-//
-//        input.getTransputValues().get(0).setValue(1.0);
-//        input.getTransputValues().get(1).setValue(5.0);
-//
-//        output = network.getOutput(input);
-//
-//        double output11 = output.getTransputValues().get(0).getValue();
-//        double output22 = output.getTransputValues().get(1).getValue();
-//
-//        Assert.assertNotEquals(output11, output1, DELTA);
-//        Assert.assertNotEquals(output22, output2, DELTA);
-//    }
 
     @Test
     public void getOutputs_inRange() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
@@ -238,5 +204,38 @@ public class NetworkTest {
 
         Assert.assertTrue(output1 >= min1 && output1 <= max1);
         Assert.assertTrue(output2 >= min2 && output2 <= max2);
+    }
+
+    @Test
+    public void getOutputs_differentInputs_randomConnectionWeights() throws InvalidNetworkParametersException, ValueNotInRangeException, InvalidNetworkInputException {
+        Transput output = new Transput();
+        Transput input = new Transput();
+
+        input.addTransputValue(new TransputValue("input1", 0.0d, 10.0d));
+        input.addTransputValue(new TransputValue("input2", 0.0d, 10.0d));
+
+        input.getTransputValues().get(0).setValue(5.0);
+        input.getTransputValues().get(1).setValue(7.0);
+
+        output.addTransputValue(new TransputValue("output1", 0.0d, 10.0d));
+        output.addTransputValue(new TransputValue("output2", 0.0d, 10.0d));
+
+        Network network = new Network(input, output, new int[]{});
+
+        NetworkHelper.resetNetworkNeuronsThreshold(network);
+        NetworkHelper.resetNetworkLayersBias(network);
+
+        output = network.getOutput(input);
+
+        double outputValue1 = output.getTransputValues().get(0).getValue();
+        double outputValue2 = output.getTransputValues().get(1).getValue();
+
+        input.getTransputValues().get(0).setValue(2.0);
+        input.getTransputValues().get(1).setValue(9.0);
+
+        output = network.getOutput(input);
+
+        Assert.assertNotEquals(outputValue1, output.getTransputValues().get(0).getValue(), DELTA);
+        Assert.assertNotEquals(outputValue2, output.getTransputValues().get(1).getValue(), DELTA);
     }
 }

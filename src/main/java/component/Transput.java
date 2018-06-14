@@ -3,9 +3,17 @@ package component;
 import component.value.TransputValue;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class Transput {
     private final ArrayList<TransputValue> transputValues = new ArrayList<>();
+
+    public Transput(){
+    }
+
+    public Transput(final Collection<TransputValue> transputValues){
+        this.transputValues.addAll(transputValues);
+    }
 
     public ArrayList<TransputValue> getTransputValues() {
         return transputValues;

@@ -1,6 +1,5 @@
 package network.mutation;
 
-import com.sun.istack.internal.Nullable;
 import component.ConnectionWeight;
 import component.TraceableChange;
 import component.neuron.Neuron;
@@ -30,9 +29,9 @@ public class NetworkMutator {
         traceableProviders.put(MutationType.LAYER_BIAS, network -> getLayersBias(network));
         traceableProviders.put(MutationType.NEURON_THRESHOLD, network -> getNeuronsThreshold(network));
 
-        mutationProviders.put(MutationType.CONNECTION_WEIGHT, network -> mutateConnectionWeight(network));
-        mutationProviders.put(MutationType.LAYER_BIAS, network -> mutateLayerBias(network));
-        mutationProviders.put(MutationType.NEURON_THRESHOLD, network -> mutateNeuronThreshold(network));
+        mutationProviders.put(MutationType.CONNECTION_WEIGHT, network -> mutateRandomConnectionWeight(network));
+        mutationProviders.put(MutationType.LAYER_BIAS, network -> mutateRandomLayerBias(network));
+        mutationProviders.put(MutationType.NEURON_THRESHOLD, network -> mutateRandomNeuronThreshold(network));
     }
 
     public static NetworkMutationInfo mutate(final Network network){
@@ -44,21 +43,21 @@ public class NetworkMutator {
                 networkMutationInfo.getOriginator()).setOriginal(networkMutationInfo.getOldNormalizedValue());
     }
 
-    public static NetworkMutationInfo mutateLayerBias(final Network network){
+    public static NetworkMutationInfo mutateRandomLayerBias(final Network network){
         Layer layer = getRandomNetworkLayer(network);
         double oldNormalizedValue = layer.getBias().getNormalized();
         layer.getBias().setFromNormalized(new Random().nextDouble() * Bias.MAX_VALUE);
         return new NetworkMutationInfo(network, MutationType.LAYER_BIAS, oldNormalizedValue, layer.getBias());
     }
 
-    public static NetworkMutationInfo mutateNeuronThreshold(final Network network){
+    public static NetworkMutationInfo mutateRandomNeuronThreshold(final Network network){
         Neuron neuron = getRandomNetworkNeuron(network);
         double oldNormalizedValue = neuron.getThreshold().getNormalized();
         neuron.getThreshold().setFromNormalized(new Random().nextDouble() * Threshold.MAX_VALUE);
         return new NetworkMutationInfo(network, MutationType.NEURON_THRESHOLD, oldNormalizedValue, neuron.getThreshold());
     }
 
-    public static NetworkMutationInfo mutateConnectionWeight(final Network network){
+    public static NetworkMutationInfo mutateRandomConnectionWeight(final Network network){
         ConnectionWeight connectionWeight = getRandomNeuronConnectionWeight(getRandomNetworkNeuron(network));
         double oldNormalizedValue = connectionWeight.getWeight().getNormalized();
         connectionWeight.getWeight().setFromNormalized(new Random().nextDouble() * Weight.MAX_VALUE);
@@ -97,7 +96,6 @@ public class NetworkMutator {
                 neuron.getInputConnectionWeights().stream()).collect(Collectors.toList()));
     }
 
-    @Nullable
     private static TraceableChange getTraceable(Collection<? extends TraceableChange> traceables, TraceableChange originator) throws TraceableNotFoundException {
         return traceables.stream().filter(traceable -> traceable.match(originator)).findFirst().orElseThrow(TraceableNotFoundException::new);
     }

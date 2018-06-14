@@ -101,8 +101,9 @@ public class TrainerTest {
             valueFromTrained = trainedNetwork.getOutput(pair.getInput()).getTransputValues().get(0).getValue();
             valueExpected = pair.getOutput().getTransputValues().get(0).getValue();
 
-            System.out.println("From network: " + valueFromTrained + ", expected: " + valueExpected);
+//            System.out.println("From network: " + valueFromTrained + ", expected: " + valueExpected);
 
+            // TODO fix that test
 //            assertValueInBounds(valueFromTrained, valueExpected);
         }
     }

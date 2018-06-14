@@ -81,6 +81,7 @@ public class Neuron{
             "id=" + id +
             ", inputConnectionWeights=" + inputConnectionWeights +
             ", outputConnection=" + outputConnection +
+            ", threshold=" + threshold +
             '}';
     }
 

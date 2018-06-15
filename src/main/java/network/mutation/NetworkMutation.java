@@ -41,8 +41,8 @@ public class NetworkMutation {
     }
 
     public static void removeMutation(Network network, MutationInfo mutationInfo) throws TraceableNotFoundException {
-        getTraceable(traceableProviders.get(mutationInfo.getNormalizedValue().getType()).get(network),
-                mutationInfo.getNormalizedValue()).setFromNormalized(mutationInfo.getOldNormalizedValue());
+        getTraceable(traceableProviders.get(mutationInfo.getOriginator().getType()).get(network),
+                mutationInfo.getOriginator()).setFromNormalized(mutationInfo.getOldNormalizedValue());
     }
 
     public static MutationInfo mutateRandomLayerBias(final Network network){

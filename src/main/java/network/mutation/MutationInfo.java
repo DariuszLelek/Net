@@ -1,6 +1,7 @@
 package network.mutation;
 
 import component.value.normalized.Originator;
+import component.value.normalized.type.Type;
 
 public class MutationInfo {
     private final Originator originator;
@@ -21,15 +22,13 @@ public class MutationInfo {
         return newNormalizedValue;
     }
 
-    public Originator getNormalizedValue() {
+    public Originator getOriginator() {
         return originator;
     }
 
     @Override
     public String toString() {
-        return "MutationInfo{" + originator.getType() +
-                ", oldNormalizedValue=" + oldNormalizedValue +
-                ", newNormalizedValue=" + newNormalizedValue +
-                '}';
+        return String.format("MutationInfo{%-" + Type.size + "s, oldNormalizedValue=%.6f, newNormalizedValue=%.6f}",
+                originator.getType().toString(), oldNormalizedValue, newNormalizedValue);
     }
 }

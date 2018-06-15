@@ -48,25 +48,22 @@ public class NetworkMutation {
     public static MutationInfo mutateRandomLayerBias(final Network network){
         Layer layer = getRandomNetworkLayer(network);
         double oldNormalizedValue = layer.getLayerBias().getNormalized();
-        double newNormalizedValue = new Random().nextDouble() * LayerBias.MAX_VALUE;
-        layer.getLayerBias().setFromNormalized(newNormalizedValue);
-        return new MutationInfo(layer.getLayerBias(), oldNormalizedValue, newNormalizedValue);
+        layer.getLayerBias().setFromNormalized(new Random().nextDouble() * LayerBias.MAX_VALUE);
+        return new MutationInfo(layer.getLayerBias(), oldNormalizedValue);
     }
 
     public static MutationInfo mutateRandomNeuronThreshold(final Network network){
         Neuron neuron = getRandomNetworkNeuron(network);
         double oldNormalizedValue = neuron.getNeuronThreshold().getNormalized();
-        double newNormalizedValue = new Random().nextDouble() * NeuronThreshold.MAX_VALUE;
         neuron.getNeuronThreshold().setFromNormalized(new Random().nextDouble() * NeuronThreshold.MAX_VALUE);
-        return new MutationInfo(neuron.getNeuronThreshold(), oldNormalizedValue, newNormalizedValue);
+        return new MutationInfo(neuron.getNeuronThreshold(), oldNormalizedValue);
     }
 
     public static MutationInfo mutateRandomConnectionWeight(final Network network){
         ConnectionWeight connectionWeight = getRandomNeuronConnectionWeight(getRandomNetworkNeuron(network));
         double oldNormalizedValue = connectionWeight.getWeight().getNormalized();
-        double newNormalizedValue = new Random().nextDouble() * Weight.MAX_VALUE;
         connectionWeight.getWeight().setFromNormalized(new Random().nextDouble() * Weight.MAX_VALUE);
-        return new MutationInfo(connectionWeight.getWeight(), oldNormalizedValue, newNormalizedValue);
+        return new MutationInfo(connectionWeight.getWeight(), oldNormalizedValue);
     }
 
     public static Neuron getRandomNetworkNeuron(final Network network){

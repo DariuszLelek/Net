@@ -2,8 +2,8 @@ package component.neuron;
 
 import component.value.normalized.Connection;
 import component.ConnectionWeight;
-import component.value.normalized.Bias;
-import component.value.normalized.Threshold;
+import component.value.normalized.LayerBias;
+import component.value.normalized.NeuronThreshold;
 import component.value.normalized.Weight;
 
 import java.util.*;
@@ -14,21 +14,21 @@ public class Neuron{
 
     private final ArrayList<ConnectionWeight> inputConnectionWeights;
     private final Connection outputConnection;
-    private final Threshold threshold;
-    private final Bias bias;
+    private final NeuronThreshold neuronThreshold;
+    private final LayerBias layerBias;
 
     public Neuron() {
         id = "NO_ID";
-        threshold = new Threshold();
-        bias = new Bias();
+        neuronThreshold = new NeuronThreshold();
+        layerBias = new LayerBias();
         outputConnection = new Connection();
         inputConnectionWeights = new ArrayList<>();
     }
 
-    public Neuron(String id, final Bias bias) {
+    public Neuron(String id, final LayerBias layerBias) {
         this.id = id;
-        this.bias = bias;
-        threshold = new Threshold();
+        this.layerBias = layerBias;
+        neuronThreshold = new NeuronThreshold();
         outputConnection = new Connection();
         inputConnectionWeights = new ArrayList<>();
     }
@@ -37,7 +37,7 @@ public class Neuron{
         outputConnection.setFromNormalized(ActivationFunction.calculateNormalized(
                 inputConnectionWeights.stream()
                 .map(cw -> cw.getConnection().getNormalized() * cw.getWeight().getNormalized())
-                .collect(Collectors.toList()), bias, threshold));
+                .collect(Collectors.toList()), layerBias, neuronThreshold));
     }
 
     public ArrayList<ConnectionWeight> getInputConnectionWeights() {
@@ -55,12 +55,12 @@ public class Neuron{
             .orElse(ConnectionWeight.EMPTY);
     }
 
-    public Threshold getThreshold() {
-        return threshold;
+    public NeuronThreshold getNeuronThreshold() {
+        return neuronThreshold;
     }
 
-    public Bias getBias() {
-        return bias;
+    public LayerBias getLayerBias() {
+        return layerBias;
     }
 
     public Connection getOutputConnection() {
@@ -81,7 +81,7 @@ public class Neuron{
             "id=" + id +
             ", inputConnectionWeights=" + inputConnectionWeights +
             ", outputConnection=" + outputConnection +
-            ", threshold=" + threshold +
+            ", neuronThreshold=" + neuronThreshold +
             '}';
     }
 
@@ -93,7 +93,7 @@ public class Neuron{
         Neuron neuron = (Neuron) o;
 
         return id.equals(neuron.id) && getInputConnectionWeights().equals(neuron.getInputConnectionWeights())
-                && getOutputConnection().equals(neuron.getOutputConnection()) && getBias().equals(neuron.getBias());
+                && getOutputConnection().equals(neuron.getOutputConnection()) && getLayerBias().equals(neuron.getLayerBias());
     }
 
     @Override
@@ -101,7 +101,7 @@ public class Neuron{
         int result = id.hashCode();
         result = 31 * result + getInputConnectionWeights().hashCode();
         result = 31 * result + getOutputConnection().hashCode();
-        result = 31 * result + getBias().hashCode();
+        result = 31 * result + getLayerBias().hashCode();
         return result;
     }
 }

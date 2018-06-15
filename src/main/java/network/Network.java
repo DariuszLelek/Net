@@ -4,8 +4,8 @@ import component.Transput;
 import component.value.TransputValueHelper;
 import component.value.normalized.Connection;
 import component.neuron.Neuron;
-import component.value.normalized.Bias;
-import component.value.normalized.Threshold;
+import component.value.normalized.LayerBias;
+import component.value.normalized.NeuronThreshold;
 import component.value.normalized.Weight;
 import exception.InvalidNetworkInputException;
 import exception.InvalidNetworkParametersException;
@@ -133,13 +133,13 @@ public class Network {
     }
 
     private void randomiseLayersBias(final List<Layer> layers){
-        layers.forEach(layer -> layer.getBias().setFromNormalized(Bias.MAX_VALUE * random.nextDouble()));
+        layers.forEach(layer -> layer.getLayerBias().setFromNormalized(LayerBias.MAX_VALUE * random.nextDouble()));
     }
 
     private void randomiseNeuronsThreshold(final List<Layer> layers){
         layers.forEach(layer ->
                 layer.getNeurons().forEach(neuron ->
-                        neuron.getThreshold().setFromNormalized(Threshold.MAX_VALUE * random.nextDouble())));
+                        neuron.getNeuronThreshold().setFromNormalized(NeuronThreshold.MAX_VALUE * random.nextDouble())));
     }
 
     private void connectLayersNeurons(Layer leftLayer, Layer rightLayer) {

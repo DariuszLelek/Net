@@ -1,7 +1,7 @@
 package network;
 
-import component.value.normalized.Bias;
-import component.value.normalized.Threshold;
+import component.value.normalized.LayerBias;
+import component.value.normalized.NeuronThreshold;
 import exception.InvalidNetworkParametersException;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,10 +26,10 @@ public class NetworkHelperTest {
     }
 
     private boolean hasAllLayersBiasReset(final Network network){
-        return network.getLayers().stream().noneMatch(layer -> layer.getBias().getNormalized() != Bias.MIN_VALUE);
+        return network.getLayers().stream().noneMatch(layer -> layer.getLayerBias().getNormalized() != LayerBias.MIN_VALUE);
     }
 
     private boolean hasAllNeutronsThresholdReset(final Network network){
-        return network.getNeurons().stream().noneMatch(neuron -> neuron.getThreshold().getNormalized() != Threshold.MIN_VALUE);
+        return network.getNeurons().stream().noneMatch(neuron -> neuron.getNeuronThreshold().getNormalized() != NeuronThreshold.MIN_VALUE);
     }
 }

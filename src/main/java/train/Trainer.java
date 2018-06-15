@@ -22,7 +22,7 @@ public class Trainer {
 //        double result = getNetworkResult(network, trainData);
         double result = LossFunction.calculate(network, trainData);
 
-        MutationInfo mutationInfo = NetworkMutation.mutate(network);
+        MutationInfo mutationInfo = NetworkMutation.mutateRandom(network);
 
 //        double postResult = getNetworkResult(network, trainData);
         double postResult = LossFunction.calculate(network, trainData);

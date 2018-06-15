@@ -1,24 +1,16 @@
 package network.mutation;
 
-import component.TraceableChange;
-import component.value.normalized.NormalizedValue;
-import network.Network;
+import component.value.normalized.Originator;
 
 public class MutationInfo {
-    private final MutationType type;
+    private final Originator originator;
     private final double oldNormalizedValue;
     private final double newNormalizedValue;
-    private final TraceableChange originator;
 
-    public MutationInfo(MutationType type, double oldNormalizedValue, NormalizedValue originator, double newNormalizedValue) {
-        this.type = type;
+    public MutationInfo(Originator originator, double oldNormalizedValue, double newNormalizedValue) {
+        this.originator = originator;
         this.oldNormalizedValue = oldNormalizedValue;
         this.newNormalizedValue = newNormalizedValue;
-        this.originator = originator;
-    }
-
-    public MutationType getType() {
-        return type;
     }
 
     public double getOldNormalizedValue() {
@@ -29,17 +21,15 @@ public class MutationInfo {
         return newNormalizedValue;
     }
 
-    public TraceableChange getOriginator() {
+    public Originator getNormalizedValue() {
         return originator;
     }
 
     @Override
     public String toString() {
-        return "MutationInfo{" +
-                "type=" + type +
+        return "MutationInfo{" + originator.getType() +
                 ", oldNormalizedValue=" + oldNormalizedValue +
                 ", newNormalizedValue=" + newNormalizedValue +
-                ", originator=" + originator.getId() +
                 '}';
     }
 }

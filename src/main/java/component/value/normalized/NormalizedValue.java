@@ -1,12 +1,12 @@
 package component.value.normalized;
 
-import component.TraceableChange;
 import component.value.NumericValue;
+import component.value.normalized.type.Type;
 import exception.ValueNotInRangeException;
 
 import java.util.UUID;
 
-public class NormalizedValue extends NumericValue implements Normalized, TraceableChange {
+public class NormalizedValue extends NumericValue implements Normalized, Originator {
     private final String id = UUID.randomUUID().toString();
 
     public static final double MAX_VALUE = 1.0;
@@ -26,6 +26,11 @@ public class NormalizedValue extends NumericValue implements Normalized, Traceab
         return getValue();
     }
 
+    @Override
+    public Type getType() {
+        return Type.NONE;
+    }
+
     public void setFromNormalized(double normalizedValue) {
         try {
             setValue(normalizedValue);
@@ -37,11 +42,6 @@ public class NormalizedValue extends NumericValue implements Normalized, Traceab
     @Override
     public String getId() {
         return id;
-    }
-
-    @Override
-    public void setOriginal(double originalNormalizedValue) {
-        setFromNormalized(originalNormalizedValue);
     }
 
     @Override

@@ -94,7 +94,7 @@ public class TrainerTest {
 
         System.out.println(notTrainedNetwork);
 
-        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 10000);
+        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 10);
 
         double valueFromTrained;
         double valueExpected;
@@ -103,7 +103,7 @@ public class TrainerTest {
             valueFromTrained = trainedNetwork.getOutput(pair.getInput()).getTransputValues().get(0).getValue();
             valueExpected = pair.getOutput().getTransputValues().get(0).getValue();
 
-            System.out.println("From network: " + valueFromTrained + ", expected: " + valueExpected);
+            //System.out.println("From network: " + valueFromTrained + ", expected: " + valueExpected);
 
             // TODO fix that test
 //            assertValueInBounds(valueFromTrained, valueExpected);

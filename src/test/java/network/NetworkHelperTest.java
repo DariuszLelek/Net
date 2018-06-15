@@ -9,7 +9,7 @@ import org.junit.Test;
 public class NetworkHelperTest {
     @Test
     public void resetNetworkNeuronsThreshold() throws InvalidNetworkParametersException {
-        Network network = TestNetworkProvider.getDefaultTestNetwork();
+        Network network = TestNetworkDataProvider.getDefaultTestNetwork(2,2);
 
         NetworkHelper.resetNetworkNeuronsThreshold(network);
 
@@ -18,7 +18,7 @@ public class NetworkHelperTest {
 
     @Test
     public void resetNetworkLayersBias() throws InvalidNetworkParametersException {
-        Network network = TestNetworkProvider.getDefaultTestNetwork();
+        Network network = TestNetworkDataProvider.getDefaultTestNetwork(2,2);
 
         NetworkHelper.resetNetworkLayersBias(network);
 

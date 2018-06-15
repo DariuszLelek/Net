@@ -7,6 +7,7 @@ import exception.InvalidTransputDataException;
 import exception.ValueNotInRangeException;
 import network.Network;
 import component.Transput;
+import network.NetworkHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,13 +48,9 @@ public class TrainerTest {
 
         double valueFromUntrained = notTrainedNetwork.getOutput(input).getTransputValues().get(0).getValue();
 
-        System.out.println(notTrainedNetwork);
-
         trainData.addTrainData(input, expectedOutput);
         Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, TRAIN_ITERATIONS);
         Transput trainedNetworkOutput = trainedNetwork.getOutput(input);
-
-        System.out.println(trainedNetwork);
 
         double valueFromTrained = trainedNetworkOutput.getTransputValues().get(0).getValue();
 
@@ -68,13 +65,16 @@ public class TrainerTest {
 
     @Test
     public void train_multipleTrainData_singleOutputValue() throws InvalidNetworkParametersException, InvalidTransputDataException, ValueNotInRangeException, InvalidNetworkInputException {
-        double inputValues[][] = {{50.0, 100.0}, {0.0, 10.0}, {18.0, 5.0}, {10.0, 10.0}};
-        double expectedValues[] = {20.0, 0.0, 95.0, 100.0};
+        double inputValues[][] = {{1.0, 10.0}, {2.0, 10.0}, {3.0, 10.0}, {4.0, 10.0}};
+        double expectedValues[] = {10.0, 20.0, 30.0, 40.0};
 
         Transput output = new Transput();
         output.addTransputValue(new TransputValue("output1", MIN, MAX));
 
-        Network notTrainedNetwork = new Network(input, output, new int[]{10, 10});
+        Network notTrainedNetwork = new Network(input, output, new int[]{2, 2});
+
+//        NetworkHelper.resetNetworkLayersBias(notTrainedNetwork);
+
         TrainData trainData = new TrainData();
 
         assert inputValues.length == expectedValues.length;
@@ -92,7 +92,9 @@ public class TrainerTest {
             trainData.addTrainData(input, expectedOutput);
         }
 
-        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 1000);
+        System.out.println(notTrainedNetwork);
+
+        Network trainedNetwork = Trainer.train(notTrainedNetwork, trainData, 10000);
 
         double valueFromTrained;
         double valueExpected;
@@ -101,11 +103,13 @@ public class TrainerTest {
             valueFromTrained = trainedNetwork.getOutput(pair.getInput()).getTransputValues().get(0).getValue();
             valueExpected = pair.getOutput().getTransputValues().get(0).getValue();
 
-//            System.out.println("From network: " + valueFromTrained + ", expected: " + valueExpected);
+            System.out.println("From network: " + valueFromTrained + ", expected: " + valueExpected);
 
             // TODO fix that test
 //            assertValueInBounds(valueFromTrained, valueExpected);
         }
+
+        System.out.println(trainedNetwork);
     }
 
     private void assertValueInBounds(double value, double expectedValue){

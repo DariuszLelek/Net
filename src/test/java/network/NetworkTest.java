@@ -40,7 +40,7 @@ public class NetworkTest {
 
     @Test(expected = InvalidNetworkParametersException.class)
     public void invalidNetwork_invalidOutputs() throws InvalidNetworkParametersException {
-        new Network(input,new Transput(), new int[]{1});
+        new Network(input, new Transput(), new int[]{1});
     }
 
     @Test(expected = InvalidNetworkParametersException.class)

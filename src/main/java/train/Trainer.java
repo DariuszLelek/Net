@@ -5,8 +5,8 @@ import exception.InvalidNetworkInputException;
 import exception.TraceableNotFoundException;
 import network.Network;
 import component.Transput;
-import network.mutation.NetworkMutationInfo;
-import network.mutation.NetworkMutator;
+import network.mutation.MutationInfo;
+import network.mutation.NetworkMutation;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;
@@ -14,25 +14,31 @@ import java.util.stream.IntStream;
 public class Trainer {
 
     public static Network train(final Network network, TrainData trainData, int iterations){
-        IntStream.range(0, iterations).forEach(i -> processTrainCycle(network, trainData));
+        IntStream.range(0, iterations).forEach(i -> processTrainCycle(i, network, trainData));
         return network;
     }
-    private static Network processTrainCycle(Network network, TrainData trainData){
-        double result = getNetworkResult(network, trainData);
 
-        NetworkMutationInfo mutationInfo = NetworkMutator.mutate(network);
+    private static Network processTrainCycle(int cycleNumber, Network network, TrainData trainData){
+//        double result = getNetworkResult(network, trainData);
+        double result = LossFunction.calculate(network, trainData);
 
-        double postResult = getNetworkResult(network, trainData);
+        MutationInfo mutationInfo = NetworkMutation.mutate(network);
 
-        if(postResult < result){
+//        double postResult = getNetworkResult(network, trainData);
+        double postResult = LossFunction.calculate(network, trainData);
+
+        if(postResult >= result){
             try {
-                NetworkMutator.removeMutation(mutationInfo);
+                NetworkMutation.removeMutation(network, mutationInfo);
             } catch (TraceableNotFoundException e) {
                 // TODO add logger
             }
         }
 
-        double postResult2 = getNetworkResult(network, trainData);
+//        double postResult2 = getNetworkResult(network, trainData);
+        double postResult2 = LossFunction.calculate(network, trainData);
+
+        System.out.println("Trrain cycle:" + cycleNumber + " preTrainResult:" + result + ", postTrain=" + postResult + ", mutationInfo=" + mutationInfo);
 
         return network;
     }

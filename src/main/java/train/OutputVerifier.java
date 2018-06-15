@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 
 public class OutputVerifier {
     private static final double MAX_DISTANCE = 1;
+    private static final double THRESHOLD = 0.9;
 
     public static double getOutputValuesMachRate(List<ArrayList<TransputValue>> networkOutputValues, List<ArrayList<TransputValue>> expectedOutputValues){
         assert networkOutputValues.size() == expectedOutputValues.size();
@@ -24,7 +25,11 @@ public class OutputVerifier {
     }
 
     public static double getOutputValueMatchRate(TransputValue networkOutputValue, TransputValue expectedOutputValue){
-        return MAX_DISTANCE - Math.abs(networkOutputValue.getNormalized() - expectedOutputValue.getNormalized());
+        return getThresholdValue(MAX_DISTANCE - Math.abs(networkOutputValue.getNormalized() - expectedOutputValue.getNormalized()));
+    }
+
+    private static double getThresholdValue(double value){
+        return value > THRESHOLD ? value : 0;
     }
 
 }

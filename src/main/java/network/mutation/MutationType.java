@@ -12,6 +12,13 @@ public enum MutationType {
     private static final int SIZE = VALUES.size();
 
     public static MutationType getRandom(){
-        return VALUES.get(new Random().nextInt(SIZE));
+        if (new Random().nextInt(2) == 1){
+            return NEURON_THRESHOLD;
+        }else{
+            return CONNECTION_WEIGHT;
+        }
+
+//        return CONNECTION_WEIGHT;
+//        return VALUES.get(new Random().nextInt(SIZE));
     }
 }

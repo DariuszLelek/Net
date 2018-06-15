@@ -43,7 +43,8 @@ public class Network {
         connectLayers(layers);
 
         randomiseConnectionsWeight(layers);
-        randomiseLayersBias(layers);
+        // TODO removing bias per layer for now to test network behaviour when mutating only weight and thresholds
+//        randomiseLayersBias(layers);
         randomiseNeuronsThreshold(layers);
     }
 
@@ -104,8 +105,15 @@ public class Network {
     }
 
     private void fire() {
+        clearValues();
         fireLayersNeurons();
         updateOutput();
+    }
+
+    private void clearValues(){
+        layers.forEach(layer ->
+                layer.getNeurons().forEach(neuron ->
+                        neuron.getInputConnectionWeights().forEach(cw -> cw.getConnection().setFromNormalized(Connection.MIN_VALUE))));
     }
 
     private void fireLayersNeurons() {

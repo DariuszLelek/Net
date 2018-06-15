@@ -20,23 +20,23 @@ public class OutputVerifierTest {
         Assert.assertEquals(1.0, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
 
         outputValue.setValue(0.0);
-        Assert.assertEquals(0.5, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
+        Assert.assertEquals(0.0, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
 
         outputValue.setValue(10.0);
-        Assert.assertEquals(0.5, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
+        Assert.assertEquals(0.0, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
 
         outputValue.setValue(7.0);
-        Assert.assertEquals(0.8, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
+        Assert.assertEquals(0.0, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
 
         outputValue.setValue(4.9);
         Assert.assertEquals(0.99, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
 
         outputValue.setValue(0.3);
-        Assert.assertEquals(0.53, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
+        Assert.assertEquals(0.0, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
 
         outputValue.setValue(10.0);
         expectedValue .setValue(1.0);
-        Assert.assertEquals(0.1, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
+        Assert.assertEquals(0.0, OutputVerifier.getOutputValueMatchRate(outputValue, expectedValue), NormalizedValue.FLOAT_DELTA);
 
         outputValue.setValue(0.0);
         expectedValue .setValue(10.0);
@@ -59,16 +59,16 @@ public class OutputVerifierTest {
         output.addTransputValue(outputValue1);
         output.addTransputValue(outputValue2);
 
-        expectedValue1.setValue(5.0);
-        expectedValue2.setValue(10.0);
+        expectedValue1.setValue(3.0);
+        expectedValue2.setValue(11.0);
 
         expectedOutput.addTransputValue(expectedValue1);
         expectedOutput.addTransputValue(expectedValue2);
 
-        Assert.assertEquals(0.8125, OutputVerifier.getOutputValuesMachRate(output.getTransputValues(), expectedOutput.getTransputValues()), NormalizedValue.FLOAT_DELTA);
+        Assert.assertEquals(0.9375, OutputVerifier.getOutputValuesMachRate(output.getTransputValues(), expectedOutput.getTransputValues()), NormalizedValue.FLOAT_DELTA);
 
-        outputValue1.setValue(5.0);
-        outputValue2.setValue(10.0);
+        outputValue1.setValue(3.0);
+        outputValue2.setValue(11.0);
         Assert.assertEquals(1.0 , OutputVerifier.getOutputValuesMachRate(output.getTransputValues(), expectedOutput.getTransputValues()), NormalizedValue.FLOAT_DELTA);
     }
 }

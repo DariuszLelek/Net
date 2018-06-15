@@ -20,9 +20,9 @@ import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class NetworkMutator {
+public class NetworkMutation {
     private static final Map<MutationType, TraceableChangeSupplier> traceableProviders = new HashMap<>();
-    private static final Map<MutationType, NetworkMutationSupplier> mutationProviders = new HashMap<>();
+    private static final Map<MutationType, MutationInfoSupplier> mutationProviders = new HashMap<>();
 
     static {
         traceableProviders.put(MutationType.CONNECTION_WEIGHT, network -> getNeuronsConnectionWeight(network));
@@ -34,34 +34,37 @@ public class NetworkMutator {
         mutationProviders.put(MutationType.NEURON_THRESHOLD, network -> mutateRandomNeuronThreshold(network));
     }
 
-    public static NetworkMutationInfo mutate(final Network network){
+    public static MutationInfo mutate(final Network network){
         return mutationProviders.get(MutationType.getRandom()).get(network);
     }
 
-    public static void removeMutation(NetworkMutationInfo networkMutationInfo) throws TraceableNotFoundException {
-        getTraceable(traceableProviders.get(networkMutationInfo.getType()).get(networkMutationInfo.getNetwork()),
-                networkMutationInfo.getOriginator()).setOriginal(networkMutationInfo.getOldNormalizedValue());
+    public static void removeMutation(Network network, MutationInfo mutationInfo) throws TraceableNotFoundException {
+        getTraceable(traceableProviders.get(mutationInfo.getType()).get(network),
+                mutationInfo.getOriginator()).setOriginal(mutationInfo.getOldNormalizedValue());
     }
 
-    public static NetworkMutationInfo mutateRandomLayerBias(final Network network){
+    public static MutationInfo mutateRandomLayerBias(final Network network){
         Layer layer = getRandomNetworkLayer(network);
         double oldNormalizedValue = layer.getBias().getNormalized();
-        layer.getBias().setFromNormalized(new Random().nextDouble() * Bias.MAX_VALUE);
-        return new NetworkMutationInfo(network, MutationType.LAYER_BIAS, oldNormalizedValue, layer.getBias());
+        double newNormalizedValue = new Random().nextDouble() * Bias.MAX_VALUE;
+        layer.getBias().setFromNormalized(newNormalizedValue);
+        return new MutationInfo(MutationType.LAYER_BIAS, oldNormalizedValue, layer.getBias(), newNormalizedValue);
     }
 
-    public static NetworkMutationInfo mutateRandomNeuronThreshold(final Network network){
+    public static MutationInfo mutateRandomNeuronThreshold(final Network network){
         Neuron neuron = getRandomNetworkNeuron(network);
         double oldNormalizedValue = neuron.getThreshold().getNormalized();
+        double newNormalizedValue = new Random().nextDouble() * Threshold.MAX_VALUE;
         neuron.getThreshold().setFromNormalized(new Random().nextDouble() * Threshold.MAX_VALUE);
-        return new NetworkMutationInfo(network, MutationType.NEURON_THRESHOLD, oldNormalizedValue, neuron.getThreshold());
+        return new MutationInfo(MutationType.NEURON_THRESHOLD, oldNormalizedValue, neuron.getThreshold(), newNormalizedValue);
     }
 
-    public static NetworkMutationInfo mutateRandomConnectionWeight(final Network network){
+    public static MutationInfo mutateRandomConnectionWeight(final Network network){
         ConnectionWeight connectionWeight = getRandomNeuronConnectionWeight(getRandomNetworkNeuron(network));
         double oldNormalizedValue = connectionWeight.getWeight().getNormalized();
+        double newNormalizedValue = new Random().nextDouble() * Weight.MAX_VALUE;
         connectionWeight.getWeight().setFromNormalized(new Random().nextDouble() * Weight.MAX_VALUE);
-        return new NetworkMutationInfo(network, MutationType.CONNECTION_WEIGHT, oldNormalizedValue, connectionWeight.getWeight());
+        return new MutationInfo(MutationType.CONNECTION_WEIGHT, oldNormalizedValue, connectionWeight.getWeight(), newNormalizedValue);
     }
 
     public static Neuron getRandomNetworkNeuron(final Network network){

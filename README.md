@@ -1,3 +1,3 @@
 # Net
 
-Test project with Neurol Network implementation.
+Test project with Neural Network implementation.
